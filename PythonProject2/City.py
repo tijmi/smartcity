@@ -2,13 +2,16 @@ import json
 import csv
 import numpy as np
 
+from PythonProject2.Info import grid_size
+
+
 class City:
 
     def __init__(self):
         self.population = 0
         self.soil_sealing = 0
         # could depend on actual dataset
-        self.wind = np.zeros((1, 1)) # Temp empty array
+        self.wind = np.empty(grid_size) # Temp empty array
 
     # use this when user choose city
     # receive from hardware

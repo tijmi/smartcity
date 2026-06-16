@@ -10,7 +10,7 @@ class Subtile:
         self.UHI = 0
 
     def get_total_subtile(self, tile_pos):
-        s_amount = math.sqrt(subtile_amount)
+        s_amount = int(math.sqrt(subtile_amount))
         x = (tile_pos[0] * s_amount) + self.subtile_pos[0]
         y = (tile_pos[1] * s_amount) + self.subtile_pos[1]
 

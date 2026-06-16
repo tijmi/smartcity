@@ -1,4 +1,4 @@
-from Info import type_effect, type_roughness, types, grid_size
+from Info import type_effect, type_roughness, types, grid_size, subtile_amount
 import math
 import numpy as np
 
@@ -6,7 +6,7 @@ import numpy as np
 class Calculator:
     def __init__(self):
         self.city = None
-        self.subtiles = np.empty(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]) # temporary empty list
+        self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
     def update_calculation(self, city, subtiles):
         self.city = city

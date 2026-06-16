@@ -27,9 +27,9 @@ class Calculator:
 
 
     def calc_wind10m(self, x, y):
-        wind_speed_10m = self.city.wind[x][y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
+        windspeed10m = self.city.wind[x][y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
 
-        return wind_speed_10m
+        return windspeed10m
 
     def calc_type_reduction(self, x, y):
         corner_tiles = [] # Tiles touching corners with main tile

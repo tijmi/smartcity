@@ -77,6 +77,8 @@ def main():
             calculator.update_calculation(city, tile_manager.get_subtiles())
 
             # SEND OVER PLAYER RELATED DATA AS OUTPUT
+            output = build_player_output(player_grid_pos, tile_manager, city)
+
 
 def get_player_loc_data(player_pos, city, tile_manager):
     # Get UHI and wind data at player location
@@ -96,7 +98,31 @@ def get_player_loc_data(player_pos, city, tile_manager):
 
     return average_wind, average_UHI
 
+# Collect all player output data and return
+def build_player_output(player_pos, tile_manager, city):
+    uhi, wind = get_player_loc_data(player_pos, city, tile_manager)
+    tile = tile_manager.tiles[player_pos[0], player_pos[0]]
+
+    x, y = player_pos
+
+    def get_neighbor_type(nx, ny):
+        if 0<=nx <tile_manager.tiles[0] and 0<=ny <tile_manager.tiles[1]:
+            return tile_manager.tiles[nx, ny].type
+        return None
+
+    # neighbors: for connect with scene in Unity
+    return{
+        "uhi": uhi,
+        "wind": wind,
+        "land_use": tile.type,
+        "neighbors":{
+            "front": get_neighbor_type(x-1, y),
+            "left": get_neighbor_type(x, y-1),
+            "right": get_neighbor_type(x, y+1),
+        }
+    }
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     main()
+

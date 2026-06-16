@@ -7,7 +7,7 @@ class TileManager:
 
     def __init__(self):
         # Make empty 2D array
-        self.tiles = np.zeros(shape=grid_size)
+        self.tiles = np.empty(shape=grid_size)
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
                 self.tiles[i, j] = Tile((i, j), 1)

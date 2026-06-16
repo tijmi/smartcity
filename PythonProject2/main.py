@@ -1,38 +1,45 @@
-from dask.array import average
-
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
 from Info import subtile_amount
 from flask import Flask, request, jsonify
-import json
+import threading
 
 app = Flask(__name__)
+
+# Shared state between Flask routes and main loop
+state = {
+    "tile_id": None,
+    "tile_type": None,
+    "city_update": None   # city_name or None
+}
+state_lock = threading.Lock()
 
 
 @app.route('/input/tile_information', methods=['POST'])
 def receive_tile_data():
-    # Handle JSON data
     data = request.get_json()
-    print(data)
-
     try:
-        tile_pos = data.get('tile_id')
+        tile_id = data.get('tile_id')
         tile_type = data.get('tile_location')
-        return tile_pos, tile_type
-    except:
-        return -1, -1
+        with state_lock:
+            state["tile_type"] = tile_type
+            state["tile_id"] = tile_id
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
 
 @app.route('/input/city_location', methods=['POST'])
 def receive_city_name():
-    # Handle JSON data
     data = request.get_json()
-
     try:
         city_name = data.get('city_location')
-        return city_name
-    except:
-        return -1
+        with state_lock:
+            state["city_update"] = city_name
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
 
 def main():
     tile_manager = TileManager()
@@ -40,30 +47,31 @@ def main():
     city = City()
     player_grid_pos = None # Tuple, but None when no player placed
 
-    while True:
+    while True: 
+        # Grab and clear any pending updates
+        with state_lock:
+            tile_id = state.pop("tile_id", None)
+            tile_type = state.pop("tile_type", None)
+            city_name = state.pop("city_update", None)
 
-        # Get tile and city update (None if no update this frame)
-        update_pos, update_type = receive_tile_data()
-        city_name = receive_city_name()
-
-        if city_name != -1:
+        if city_name is not None:
             city = city.update_city(city_name)
 
             print("new city")
 
-        if update_type != -1 and update_pos != -1:
+        if tile_type is not None and tile_id is not None:
 
             print("new tile")
 
-            if update_pos == player_grid_pos:
+            if tile_id == player_grid_pos:
                 player_grid_pos = None
 
-            if update_type <= 8: # if not a character
-                tile_manager.update_tile(update_pos, update_type)
+            if tile_type <= 8: # if not a character
+                tile_manager.update_tile(tile_id, tile_type)
             else: # if character
-                update_type -= 8
-                tile_manager.update_tile(update_pos, update_type)
-                player_grid_pos = update_pos
+                tile_type -= 8
+                tile_manager.update_tile(tile_id, tile_type)
+                player_grid_pos = tile_id
 
             calculator.update_calculation(city, tile_manager.get_subtiles())
 
@@ -112,7 +120,7 @@ def build_player_output(player_pos, tile_manager, city):
         }
     }
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000, debug=False), daemon=True)
+    flask_thread.start()
     main()

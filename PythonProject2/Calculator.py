@@ -6,7 +6,7 @@ import numpy as np
 class Calculator:
     def __init__(self):
         self.city = None
-        self.subtiles = np.zeros((1, 1)) # temporary empty list
+        self.subtiles = np.empty(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]) # temporary empty list
 
     def update_calculation(self, city, subtiles):
         self.city = city
@@ -18,8 +18,8 @@ class Calculator:
                 current_subtile.update_UHI(self.calc_act_UHI(x, y))
 
     def calc_act_UHI(self, x, y):
-        max_UHI = abs(-1.605 + (1.062 * math.log10(self.city.population10km)) - (0.356 * self.calc_wind10m(x, y)))
-        pot_UHI = max_UHI * self.city.soil_sealing1km
+        max_UHI = abs(-1.605 + (1.062 * math.log10(self.city.population)) - (0.356 * self.calc_wind10m(x, y)))
+        pot_UHI = max_UHI * self.city.soil_sealing
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
 

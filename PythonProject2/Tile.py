@@ -9,7 +9,7 @@ class Tile:
     def __init__(self, grid_pos, type):
         self.grid_pos = grid_pos
         self.type = 0
-        self.subtiles = np.zeros(shape=(int(math.sqrt(subtile_amount)), int(math.sqrt(subtile_amount))))
+        self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)), int(math.sqrt(subtile_amount))))
 
         self.update_tile(type)
 
@@ -28,4 +28,4 @@ class Tile:
         # Generate subtiles
         for x in range(int(math.sqrt(subtile_amount))):
             for y in range(int(math.sqrt(subtile_amount))):
-                self.subtiles[x, y] = (Subtile(type, (x, y)))
+                self.subtiles[x, y] = (Subtile(self.type, (x, y)))

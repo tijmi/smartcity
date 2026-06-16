@@ -3,6 +3,7 @@ from dask.array import average
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
+from Heatmap_Creator import Heatmap_Creator
 from Info import subtile_amount
 from flask import Flask, request, jsonify
 import json
@@ -38,6 +39,7 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
+    heatmap_creator = Heatmap_Creator()
     player_grid_pos = None # Tuple, but None when no player placed
 
     player_UHI = 0
@@ -75,6 +77,7 @@ def main():
                 player_UHI, player_wind = get_player_loc_data(player_grid_pos, city, tile_manager)
 
             calculator.update_calculation(city, tile_manager.get_subtiles())
+            heatmap_creator.update_heatmap(tile_manager.get_subtiles())
 
             # SEND OVER PLAYER RELATED DATA AS OUTPUT
             output = build_player_output(player_grid_pos, tile_manager, city)

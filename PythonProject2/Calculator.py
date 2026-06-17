@@ -1,6 +1,7 @@
 from Info import type_effect, type_roughness, types, grid_size, subtile_amount
 import math
 import numpy as np
+import json
 
 
 class Calculator:
@@ -16,11 +17,12 @@ class Calculator:
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
                 UHI = self.calc_act_UHI(x, y)
+                print(UHI)
                 current_subtile.UHI = UHI
 
     def calc_act_UHI(self, x, y):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.population)) - (0.356 * self.calc_wind10m(x, y))
-        pot_UHI = abs(max_UHI) * self.city.soil_sealing
+        pot_UHI = abs(max_UHI) * self.city.soil_sealing / 100
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
 
@@ -29,12 +31,13 @@ class Calculator:
 
     def calc_wind10m(self, x, y):
         windspeed10m = self.city.wind[x, y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
-
+        print(f"windspeed: {windspeed10m}")
         return windspeed10m
 
     def calc_type_reduction(self, x, y):
         corner_tiles = [] # Tiles touching corners with main tile
         side_tiles = [] # Tiles to the sides of main tile
+        fake_tiles = self.city.fake_tiles
         type_coverage30m = { # Temp empty version
             "built_low": 0,
             "built_high": 0,
@@ -50,29 +53,38 @@ class Calculator:
         for i in range(x - 1, x + 2):
             for j in range(y - 1, y + 2):
                 if i == x and j == y:
-                    continue  # skip center
+                    continue  # Skip center
+
+                is_side = (i == x) or (j == y)  # Same row or column, not diagonal
 
                 try:
                     tile = self.subtiles[i, j]
-                    is_side = (i == x) or (j == y)  # same row or column, not diagonal
 
                     if is_side:
                         side_tiles.append(tile.type)
                     else:
                         corner_tiles.append(tile.type)
                 except:
-                    pass # Skipped empty ghost tiles
+                    tile_type = fake_tiles[i+ 1, j+ 1]
+
+                    with open('Tile_types.json', 'r') as jsonfile:
+                        data = json.load(jsonfile)
+
+                        tile_type = data[str(int(tile_type))]
+
+                    if is_side:
+                        side_tiles.append(tile_type)
+                    else:
+                        corner_tiles.append(tile_type)
 
         # Note how much each type covers the area. Totals to 100
         for tile_type in corner_tiles:
             if tile_type in types: type_coverage30m[tile_type] += 7.71
-            else: print("Oh no! It looks like someone made a type typo, how sad!")
         for tile_type in side_tiles:
             if tile_type in types: type_coverage30m[tile_type] += 13.74
-            else: print("Oh no! It looks like someone made a type typo, how sad!")
         type_coverage30m[self.subtiles[x, y].type] += 14.2
 
-        print(type_coverage30m)
+        print(f"coordinates: {x, y} this {type_coverage30m}")
 
         # Calculate type reduction
         total = 0

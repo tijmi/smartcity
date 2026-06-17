@@ -9,10 +9,11 @@ from PythonProject2.Info import grid_size, subtile_amount
 class City:
 
     def __init__(self):
-        self.population = 750
-        self.soil_sealing = 50
+        self.population = 250000
+        self.soil_sealing = 87.64
         # could depend on actual dataset
         self.wind = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1])) # Temp empty array
+        self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
 
     # use this when user choose city
     # receive from hardware

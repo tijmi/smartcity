@@ -59,11 +59,14 @@ def main():
         with state_lock:
             tile_id = state.pop("tile_id", None)
             tile_type = state.pop("tile_type", None)
-            city_name = state.pop("city_update", None)
+            city_id = state.pop("city_update", None)
 
-        if city_name is not None:
+        if city_id is not None:
             print("new city")
-            city = city.update_city(city_name)
+            city.update_city(city_id)
+
+            # Update calculations and heatmap
+            update_everything(tile_manager, city, calculator, heatmap)
 
         if tile_type is not None and tile_id is not None:
             print("new tile")
@@ -81,9 +84,7 @@ def main():
                 player_grid_pos = tile_id # Update player position
 
             # Update calculations and heatmap
-            all_subtiles = tile_manager.get_subtiles()
-            calculator.update_calculation(city, all_subtiles)
-            heatmap.update_heatmap(all_subtiles)
+            update_everything(tile_manager, city, calculator, heatmap)
 
             # Only output if we know where the player is
             if player_grid_pos is not None:
@@ -94,6 +95,11 @@ def main():
                 send_wind_uhi(url_wind, 0)
                 send_wind_uhi(url_uhi, 0)
 
+def update_everything(tile_manager, city, calculator, heatmap):
+    # Update calculations and heatmap
+    all_subtiles = tile_manager.get_subtiles()
+    calculator.update_calculation(city, all_subtiles, tile_manager.tile_population)
+    heatmap.update_heatmap(all_subtiles)
 
 def get_player_loc_data(player_pos, city, tile_manager):
     # Get UHI and wind data at player location

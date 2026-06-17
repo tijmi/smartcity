@@ -2,7 +2,6 @@ from Tile import Tile
 from Info import grid_size, subtile_amount
 import numpy as np
 import math
-import random
 
 class TileManager:
 
@@ -13,6 +12,8 @@ class TileManager:
             for j in range(grid_size[1]):
                 self.tiles[i, j] = Tile((i, j), 3)
 
+        self.tile_population = 0
+
 
     def update_tile(self, position, type):
 
@@ -21,8 +22,9 @@ class TileManager:
 
         print(x, y)
 
-        tile = self.tiles[x, y]
-        tile.update_tile(type)
+        self.tile_population -= self.tiles[x, y].population # Remove population addition of that tile
+        self.tiles[x, y] = Tile((x, y), type)
+        self.tile_population += self.tiles[x, y].population # Add population of that tile
 
     def get_subtiles(self):
         # Make empty subtiles array

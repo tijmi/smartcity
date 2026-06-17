@@ -9,26 +9,23 @@ from PythonProject2.Info import grid_size, subtile_amount
 class City:
 
     def __init__(self):
-        self.population = 250000
-        self.soil_sealing = 87.64
+        self.population = 1
+        self.soil_sealing = 40
         # could depend on actual dataset
-        self.wind = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1])) # Temp empty array
+        self.wind = 10
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
 
     # use this when user choose city
     # receive from hardware
-    def update_city(self, city_name):
-        # update vars from json
-        city = City()
+    def update_city(self, city_id):
         with open('city_data.json', 'r') as jsonfile:
             data = json.load(jsonfile)
 
+            self.population = data[str(city_id)]['population']
+            self.soil_sealing = data[str(city_id)]['soilsealing']
+            self.wind = data[str(city_id)]['wind']
 
-            city.population = data[city_name]['population']
-            city.soil_sealing = data[city_name]['soil']
-            city.wind = data[city_name]['wind']
-
-        return city
+            print(self.population, self.soil_sealing, self.wind)
 
     # One time working function for importing actual data to JSON file
     def save_to_json(self, csv_path):

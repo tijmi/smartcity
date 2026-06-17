@@ -1,0 +1,32 @@
+{
+  "0": {
+    "name": "Veluwe",
+    "population": 200000,
+    "soilsealing": 45,
+    "wind": 7
+  },
+    "1": {
+    "name": "Veluwe",
+    "population": 800000,
+    "soilsealing": 100,
+    "wind": 7
+  },
+    "2": {
+    "name": "Veluwe",
+    "population": 300000,
+    "soilsealing": 80,
+    "wind": 7
+  },
+    "3": {
+    "name": "Veluwe",
+    "population": 10,
+    "soilsealing": 30,
+    "wind": 7
+  },
+    "4": {
+    "name": "Veluwe",
+    "population": 300000,
+    "soilsealing": 80,
+    "wind": 7
+  }
+}

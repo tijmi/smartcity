@@ -31,7 +31,6 @@ class Calculator:
 
     def calc_wind10m(self, x, y):
         windspeed10m = self.city.wind[x, y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
-        print(f"windspeed: {windspeed10m}")
         return windspeed10m
 
     def calc_type_reduction(self, x, y):
@@ -90,7 +89,5 @@ class Calculator:
         total = 0
         for type in types:
             total += (type_coverage30m[type] / 100) * type_effect[type]
-
-        print(total)
 
         return total

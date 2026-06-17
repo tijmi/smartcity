@@ -19,6 +19,8 @@ class TileManager:
         x = int(position % grid_size[0])
         y = int(position // grid_size[1])
 
+        print(x, y)
+
         tile = self.tiles[x, y]
         tile.update_tile(type)
 

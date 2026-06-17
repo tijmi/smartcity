@@ -5,6 +5,10 @@ from Heatmap_Creator import Heatmap_Creator
 from Info import subtile_amount, grid_size
 from flask import Flask, request, jsonify
 import threading
+import requests
+
+url_uhi = "https://192.168.1.3:5000/output/uhi"
+url_wind = "https://192.168.1.3:5000/output/wind"
 
 app = Flask(__name__)
 
@@ -64,24 +68,31 @@ def main():
         if tile_type is not None and tile_id is not None:
             print("new tile")
 
-            if tile_id == player_grid_pos: # If player got replaced
+            if tile_id == player_grid_pos:  # If player got replaced
                 player_grid_pos = None
-                output = None
+                send_wind_uhi(url_wind, 0)
+                send_wind_uhi(url_uhi, 0)
 
-            if tile_type <= 7: # if not a character
+            if tile_type <= 7:  # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
-            else: # if character
+            else:  # if character
                 tile_type -= 7
                 tile_manager.update_tile(tile_id, tile_type)
-                player_grid_pos = tile_id
+                player_grid_pos = tile_id # Update player position
 
-                # Update output with new player pos
-                output = build_player_output(player_grid_pos, tile_manager, city)
-
-            # Update Calculations and heatmap
+            # Update calculations and heatmap
             all_subtiles = tile_manager.get_subtiles()
             calculator.update_calculation(city, all_subtiles)
             heatmap.update_heatmap(all_subtiles)
+
+            # Only output if we know where the player is
+            if player_grid_pos is not None:
+                output = build_player_output(player_grid_pos, tile_manager, city)
+                send_wind_uhi(url_wind, output["wind"])
+                send_wind_uhi(url_uhi, output["uhi"])
+            else:
+                send_wind_uhi(url_wind, 0)
+                send_wind_uhi(url_uhi, 0)
 
 
 def get_player_loc_data(player_pos, city, tile_manager):
@@ -106,12 +117,14 @@ def get_player_loc_data(player_pos, city, tile_manager):
 # Collect all player output data and return
 def build_player_output(player_pos, tile_manager, city):
     uhi, wind = get_player_loc_data(player_pos, city, tile_manager)
-    tile = tile_manager.tiles[player_pos[0], player_pos[0]]
 
-    x, y = player_pos
+    x = int(player_pos % grid_size[0])
+    y = int(player_pos // grid_size[1])
+
+    tile = tile_manager.tiles[x, y]
 
     def get_neighbor_type(nx, ny):
-        if 0<=nx <tile_manager.tiles[0] and 0<=ny <tile_manager.tiles[1]:
+        if 0 <= nx < grid_size[0] and 0 <= ny < grid_size[1]:
             return tile_manager.tiles[nx, ny].type
         return None
 
@@ -126,6 +139,12 @@ def build_player_output(player_pos, tile_manager, city):
             "right": get_neighbor_type(x, y+1),
         }
     }
+
+def send_wind_uhi(url, payload):
+    try:
+        resp = requests.post(url, json= payload, timeout=1)
+    except Exception as e:
+        print(f"error {e}")
 
 if __name__ == '__main__':
     flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000, debug=False), daemon=True)

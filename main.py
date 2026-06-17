@@ -1,26 +1,26 @@
 import serial
 import serial.tools.list_ports
+import math
 import time
-from pynput import keyboard
-import threading
 
 
-DMX_CHANNEL = 1
+DMX_CHANNEL = 142
 SERIAL_PORT = None
-SERIAL_BAUDRATE = 250000
+SERIAL_BAUDRATE = 19200
 UHI_effect = 2.0
 adjusted_UHI_effect = 0
 
 
 ENTTEC_START = 0x7E
 ENTTEC_END = 0xE7
-ENTTEC_LABEL = 6
+ENTTEC_LABEL = 100
 
 
 def find_dmx_port():
     """Auto-detect the first USB-serial port (likely the DMX adapter)."""
     ports = list(serial.tools.list_ports.comports())
     for p in ports:
+        print(f"[info] Found serial port: {p.device} - {p.description}")
         if any(k in p.description.lower() for k in ("enttec", "dmx", "ftdi", "usb serial")):
             return p.device
     # Fallback: return first available port
@@ -63,10 +63,11 @@ class HeatLampController:
         Set lamp brightness.
         value: 0 (off) to 255 (full brightness / maximum heat).
         """
-        value = max(0, min(255, value))
+        value = int(round(max(0, min(255, value))))
         self.dmx_universe[self.channel - 1] = value
         packet = build_enttec_packet(self.dmx_universe)
         self.ser.write(packet)
+        # print(f"packet: {len(packet)} bytes, first 10 bytes: {packet[:10]}")
         print(f"[dmx] Channel {self.channel} → {value}  ({value / 255 * 100:.1f}%)")
 
     def set_percent(self, percent: float):
@@ -89,28 +90,37 @@ class HeatLampController:
         self.close()
 
 
-# ── Demo / Interactive CLI ───────────────────────────────────────────────────
+# ── Demo / Wave Loop ─────────────────────────────────────────────────────────
 
-def Set_brightness_of_lamp(lamp: HeatLampController, UHI_effect: float = UHI_effect):
+def run_brightness_wave(
+    lamp: HeatLampController,
+    min_effect: float = 0.0,
+    max_effect: float = 2.75,
+    period_seconds: float = 4.0,
+):
+    """Continuously move the lamp brightness in a smooth wave."""
+    if period_seconds <= 0:
+        raise ValueError("period_seconds must be greater than 0")
+
+    phase = 0.0
+    step = (2 * math.pi) / max(1, int(period_seconds * 20))
+
     while True:
-        try:
-            adjusted_UHI_effect = 265 / 3 * UHI_effect
-            lamp.set_brightness(adjusted_UHI_effect)
-        except ValueError:
-            print("[warn] Invalid UHI effect")
+        wave = (math.sin(phase) + 1) / 2
+        UHI_effect = min_effect + (max_effect - min_effect) * wave
+        adjusted_UHI_effect = 265 / 3 * UHI_effect
+        lamp.set_brightness(adjusted_UHI_effect)
+        phase += step
+        time.sleep(period_seconds / max(1, int(period_seconds * 20)))
 
-def on_press(key):
-    global UHI_effect
-    if key.char == 'g':
-        UHI_effect = 0
-    if key.char == 'b':
-        UHI_effect = 2.75
-
-
+def set_brightness(lamp: HeatLampController,
+    brightness: int
+):
+    lamp.set_brightness(brightness)
 
 
 if __name__ == "__main__":
     with HeatLampController(channel=DMX_CHANNEL, port=SERIAL_PORT) as lamp:
-        listener = keyboard.Listener(on_press=on_press)
-        listener.start()
-        Set_brightness_of_lamp(lamp, UHI_effect=UHI_effect)
+        # run_brightness_wave(lamp)
+        while True:
+            set_brightness(lamp, 255)  # Set to ~50% brightness for testing

@@ -12,7 +12,9 @@ class City:
         self.population = 1
         self.soil_sealing = 0
         # could depend on actual dataset
-        self.wind = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)))) # Temp empty array
+        self.wind = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1])) # Temp empty array
+        print(self.wind)
+        print(int(math.sqrt(subtile_amount)))
 
     # use this when user choose city
     # receive from hardware

@@ -1,6 +1,7 @@
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
+from Heatmap_Creator import Heatmap_Creator
 from Info import subtile_amount, grid_size
 from flask import Flask, request, jsonify
 import threading
@@ -46,6 +47,7 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
+    heatmap = Heatmap_Creator()
     player_grid_pos = None # Tuple, but None when no player placed
 
     while True:
@@ -56,16 +58,13 @@ def main():
             city_name = state.pop("city_update", None)
 
         if city_name is not None:
+            print("new city")
             city = city.update_city(city_name)
 
-            print("new city")
-
         if tile_type is not None and tile_id is not None:
-
             print("new tile")
 
-            # Player got replaced
-            if tile_id == player_grid_pos:
+            if tile_id == player_grid_pos: # If player got replaced
                 player_grid_pos = None
                 output = None
 
@@ -79,7 +78,11 @@ def main():
                 # Update output with new player pos
                 output = build_player_output(player_grid_pos, tile_manager, city)
 
-            calculator.update_calculation(city, tile_manager.get_subtiles())
+            # Update Calculations and heatmap
+            all_subtiles = tile_manager.get_subtiles()
+            calculator.update_calculation(city, all_subtiles)
+            heatmap.update_heatmap(all_subtiles)
+
 
 def get_player_loc_data(player_pos, city, tile_manager):
     # Get UHI and wind data at player location

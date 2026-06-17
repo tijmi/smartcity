@@ -14,13 +14,13 @@ class Calculator:
         for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):
             for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
-                print(x, y)
                 current_subtile = self.subtiles[x, y]
-                current_subtile.update_UHI(self.calc_act_UHI(x, y))
+                UHI = self.calc_act_UHI(x, y)
+                current_subtile.UHI = UHI
 
     def calc_act_UHI(self, x, y):
-        max_UHI = abs(-1.605 + (1.062 * math.log10(self.city.population)) - (0.356 * self.calc_wind10m(x, y)))
-        pot_UHI = max_UHI * self.city.soil_sealing
+        max_UHI = -1.605 + (1.062 * math.log10(self.city.population)) - (0.356 * self.calc_wind10m(x, y))
+        pot_UHI = abs(max_UHI) * self.city.soil_sealing
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
 
@@ -46,17 +46,24 @@ class Calculator:
             "bare_soil": 0
         }
 
-        # Gather all the types corner- and side-connected
-        for i in range(x - 1, x + 1):
-            for j in range(y - 1, y + 1):
-                tile = self.subtiles[i, j]
+        # Gather all the types corner- and side-connected neighbours
+        for i in range(x - 1, x + 2):
+            for j in range(y - 1, y + 2):
+                if i == x and j == y:
+                    continue  # skip center
 
-                if i == 0 or j == 0:
-                    side_tiles.append(tile.type)
-                elif i != 0 and j != 0:
-                    corner_tiles.append(tile.type)
+                try:
+                    tile = self.subtiles[i, j]
+                    is_side = (i == x) or (j == y)  # same row or column, not diagonal
 
-        # Note how much each type covers the area
+                    if is_side:
+                        side_tiles.append(tile.type)
+                    else:
+                        corner_tiles.append(tile.type)
+                except:
+                    pass # Skipped empty ghost tiles
+
+        # Note how much each type covers the area. Totals to 100
         for tile_type in corner_tiles:
             if tile_type in types: type_coverage30m[tile_type] += 7.71
             else: print("Oh no! It looks like someone made a type typo, how sad!")
@@ -65,9 +72,13 @@ class Calculator:
             else: print("Oh no! It looks like someone made a type typo, how sad!")
         type_coverage30m[self.subtiles[x, y].type] += 14.2
 
+        print(type_coverage30m)
+
         # Calculate type reduction
         total = 0
         for type in types:
-            total += type_coverage30m[type] * type_effect[type]
+            total += (type_coverage30m[type] / 100) * type_effect[type]
+
+        print(total)
 
         return total

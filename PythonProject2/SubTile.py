@@ -16,6 +16,3 @@ class Subtile:
 
         total_pos = (x, y)
         return total_pos
-
-    def update_UHI(self, uhi):
-        self.UHI = uhi

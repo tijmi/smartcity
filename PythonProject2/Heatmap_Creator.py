@@ -25,7 +25,7 @@ class Heatmap_Creator:
         plt.clf()
         plt.imshow(
             uhi_grid,
-            cmap = "RdY1Gn_r",# Green(Low) to Red(High)
+            cmap = "RdYlGn_r",# Green(Low) to Red(High)
             vmin = 0, vmax = 3.0,# UHI range
             interpolation= "bilinear" # smooth blending between tile edges
         )

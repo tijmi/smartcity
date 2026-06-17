@@ -9,12 +9,10 @@ from PythonProject2.Info import grid_size, subtile_amount
 class City:
 
     def __init__(self):
-        self.population = 1
-        self.soil_sealing = 0
+        self.population = 750
+        self.soil_sealing = 50
         # could depend on actual dataset
-        self.wind = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1])) # Temp empty array
-        print(self.wind)
-        print(int(math.sqrt(subtile_amount)))
+        self.wind = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1])) # Temp empty array
 
     # use this when user choose city
     # receive from hardware
@@ -31,7 +29,7 @@ class City:
 
         return city
 
-    # One time working function for importing actual data to json file
+    # One time working function for importing actual data to JSON file
     def save_to_json(self, csv_path):
         cities = ["DenHaag", "Middelburg", "Eindhoven", "Groningen", "Veluwe"]
         city_json = {}

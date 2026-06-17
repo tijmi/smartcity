@@ -8,7 +8,7 @@ class Tile:
 
     def __init__(self, grid_pos, type):
         self.grid_pos = grid_pos
-        with open('Tile_types.json', 'r') as jsonfile:
+        with open('PythonProject2/Tile_types.json', 'r') as jsonfile:
             data = json.load(jsonfile)
 
             self.type = data[str(type)]

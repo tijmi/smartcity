@@ -7,8 +7,8 @@ from flask import Flask, request, jsonify
 import threading
 import requests
 
-url_uhi = "https://192.168.1.3:5000/output/uhi"
-url_wind = "https://192.168.1.3:5000/output/wind"
+url_uhi = "http://192.168.1.3:5000/output/uhi"
+url_wind = "http://192.168.1.3:5000/output/wind"
 
 app = Flask(__name__)
 
@@ -92,8 +92,12 @@ def main():
                 send_wind_uhi(url_wind, output["wind"])
                 send_wind_uhi(url_uhi, output["uhi"])
             else:
-                send_wind_uhi(url_wind, 0)
-                send_wind_uhi(url_uhi, 0)
+                # send_wind_uhi(url_wind, 0)
+                # send_wind_uhi(url_uhi, 0)
+
+                output = build_player_output(10, tile_manager, city)
+                send_wind_uhi(url_wind, output["wind"])
+                send_wind_uhi(url_uhi, output["uhi"])
 
 def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap
@@ -111,7 +115,7 @@ def get_player_loc_data(player_pos, city, tile_manager):
     total_UHI = 0
     for subtile in tile.subtiles.flat: # For each subtile within the player's tile
         total_UHI += subtile.UHI # Get subtile UHI
-        total_wind += wind_data[subtile.total_subtile_pos] # Get subtile wind
+        total_wind += wind_data # Get subtile wind
 
     # Final data to output
     average_UHI = total_UHI / subtile_amount

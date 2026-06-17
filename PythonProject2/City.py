@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import math
 
-from PythonProject2.Info import grid_size, subtile_amount
+from Info import grid_size, subtile_amount
 
 
 class City:

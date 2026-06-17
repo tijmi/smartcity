@@ -68,7 +68,7 @@ class Calculator:
                 except:
                     tile_type = fake_tiles[i+ 1, j+ 1]
 
-                    with open('Tile_types.json', 'r') as jsonfile:
+                    with open('PythonProject2/Tile_types.json', 'r') as jsonfile:
                         data = json.load(jsonfile)
 
                         tile_type = data[str(int(tile_type))]

@@ -92,12 +92,8 @@ def main():
                 send_wind_uhi(url_wind, output["wind"])
                 send_wind_uhi(url_uhi, output["uhi"])
             else:
-                # send_wind_uhi(url_wind, 0)
-                # send_wind_uhi(url_uhi, 0)
-
-                output = build_player_output(10, tile_manager, city)
-                send_wind_uhi(url_wind, output["wind"])
-                send_wind_uhi(url_uhi, output["uhi"])
+                send_wind_uhi(url_wind, 0)
+                send_wind_uhi(url_uhi, 0)
 
 def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap

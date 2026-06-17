@@ -11,9 +11,10 @@ class Calculator:
     def update_calculation(self, city, subtiles):
         self.city = city
         self.subtiles = subtiles
-        for x in range(grid_size[0]):
-            for y in range(grid_size[1]):
+        for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):
+            for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
+                print(x, y)
                 current_subtile = self.subtiles[x, y]
                 current_subtile.update_UHI(self.calc_act_UHI(x, y))
 
@@ -27,7 +28,7 @@ class Calculator:
 
 
     def calc_wind10m(self, x, y):
-        windspeed10m = self.city.wind[x][y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
+        windspeed10m = self.city.wind[x, y] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
 
         return windspeed10m
 

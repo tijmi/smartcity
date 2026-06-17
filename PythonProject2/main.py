@@ -1,7 +1,7 @@
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
-from Info import subtile_amount
+from Info import subtile_amount, grid_size
 from flask import Flask, request, jsonify
 import threading
 
@@ -19,9 +19,10 @@ state_lock = threading.Lock()
 @app.route('/input/tile_information', methods=['POST'])
 def receive_tile_data():
     data = request.get_json()
+    print(data)
     try:
         tile_id = data.get('tile_id')
-        tile_type = data.get('tile_location')
+        tile_type = data.get('tile_type')
         with state_lock:
             state["tile_type"] = tile_type
             state["tile_id"] = tile_id
@@ -47,7 +48,7 @@ def main():
     city = City()
     player_grid_pos = None # Tuple, but None when no player placed
 
-    while True: 
+    while True:
         # Grab and clear any pending updates
         with state_lock:
             tile_id = state.pop("tile_id", None)
@@ -63,19 +64,22 @@ def main():
 
             print("new tile")
 
+            # Player got replaced
             if tile_id == player_grid_pos:
                 player_grid_pos = None
+                output = None
 
-            if tile_type <= 8: # if not a character
+            if tile_type <= 7: # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
             else: # if character
-                tile_type -= 8
+                tile_type -= 7
                 tile_manager.update_tile(tile_id, tile_type)
                 player_grid_pos = tile_id
 
-            calculator.update_calculation(city, tile_manager.get_subtiles())
+                # Update output with new player pos
+                output = build_player_output(player_grid_pos, tile_manager, city)
 
-            output = build_player_output(player_grid_pos, tile_manager, city)
+            calculator.update_calculation(city, tile_manager.get_subtiles())
 
 def get_player_loc_data(player_pos, city, tile_manager):
     # Get UHI and wind data at player location
@@ -83,7 +87,7 @@ def get_player_loc_data(player_pos, city, tile_manager):
 
     total_wind = 0
 
-    tile = tile_manager.tiles[player_pos[0], player_pos[1]] # Tile of player
+    tile = tile_manager.tiles[player_pos % grid_size[0], player_pos // grid_size[1]] # Tile of player
     total_UHI = 0
     for subtile in tile.subtiles.flat: # For each subtile within the player's tile
         total_UHI += subtile.UHI # Get subtile UHI

@@ -1,17 +1,18 @@
 import json
 import csv
 import numpy as np
+import math
 
-from PythonProject2.Info import grid_size
+from PythonProject2.Info import grid_size, subtile_amount
 
 
 class City:
 
     def __init__(self):
-        self.population = 0
+        self.population = 1
         self.soil_sealing = 0
         # could depend on actual dataset
-        self.wind = np.empty(grid_size) # Temp empty array
+        self.wind = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)))) # Temp empty array
 
     # use this when user choose city
     # receive from hardware

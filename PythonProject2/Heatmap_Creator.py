@@ -34,3 +34,4 @@ class Heatmap_Creator:
         plt.tight_layout()
         plt.draw()
         plt.pause(0.01)
+        plt.savefig("PythonProject2/heatmap.png")

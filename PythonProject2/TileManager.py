@@ -2,6 +2,7 @@ from Tile import Tile
 from Info import grid_size, subtile_amount
 import numpy as np
 import math
+import random
 
 class TileManager:
 
@@ -10,7 +11,7 @@ class TileManager:
         self.tiles = np.empty(shape=grid_size, dtype=object)
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
-                self.tiles[i, j] = Tile((i, j), 3)
+                self.tiles[i, j] = Tile((i, j), random.randint(0, 7))
 
         self.tile_population = 0
 

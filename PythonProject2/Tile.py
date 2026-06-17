@@ -13,13 +13,11 @@ class Tile:
 
             self.type = data[str(type)]
 
+        self.population = 0
+
         # Generate subtiles
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)), int(math.sqrt(subtile_amount))), dtype=object)
         for x in range(int(math.sqrt(subtile_amount))):
             for y in range(int(math.sqrt(subtile_amount))):
                 self.subtiles[x, y] = Subtile(self.type, (x, y), self.grid_pos)
-
-        # Example of getting population
-        self.population = 0
-        if type == "built_low": self.population = 4
-        if type == "built_high": self.population = 10
+                self.population += self.subtiles[x, y].population

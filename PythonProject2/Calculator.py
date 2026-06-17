@@ -22,8 +22,9 @@ class Calculator:
 
     def calc_act_UHI(self, x, y, tile_population):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.population + tile_population)) - (0.356 * self.calc_wind10m(x, y))
+        if max_UHI < 0: max_UHI = 0
 
-        pot_UHI = abs(max_UHI) * self.city.soil_sealing / 100
+        pot_UHI = max_UHI * self.city.soil_sealing / 100
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)

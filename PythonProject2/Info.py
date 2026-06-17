@@ -24,4 +24,4 @@ grid_size = (6, 8)
 
 types = ("built_low", "built_high", "trees", "shrubs", "low_veg", "water", "farmland", "bare_soil") # string list
 
-subtile_amount = 4 # 2x2 within tile
+subtile_amount = 9 # 2x2 within tile

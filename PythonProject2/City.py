@@ -24,6 +24,7 @@ class City:
             self.population = data[str(city_id)]['population']
             self.soil_sealing = data[str(city_id)]['soilsealing']
             self.wind = data[str(city_id)]['wind']
+            #self.fake_tiles = data[str(city_id)]['fake_tiles']
 
             print(self.population, self.soil_sealing, self.wind)
 

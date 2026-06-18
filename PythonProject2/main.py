@@ -108,8 +108,6 @@ def main():
             # Update calculations and heatmap
             update_everything(tile_manager, city, temperature, calculator, heatmap)
 
-            print(tile_id)
-
             # Only output if we know where the player is
             if player_grid_pos is not None:
                 output = build_player_output(player_grid_pos, tile_manager, city)

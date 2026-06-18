@@ -40,10 +40,10 @@ class City:
     
     def fill_fake_tiles(self):
         arr = np.empty((10, 8), dtype=object)
-        right_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
-        left_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
-        top_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
-        bottom_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
+        right_values = ["built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high"]
+        left_values = ["built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high"]
+        top_values = ["built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high"]
+        bottom_values = ["built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high", "built_high"]
 
         arr[0, :] = top_values      # 10 values
         arr[-1, :] = bottom_values  # 10 values
@@ -85,3 +85,12 @@ class City:
             json.dump(city_json, f, indent=2)
 
         print(f"Saved: {list(city_json.keys())}")
+
+city = City()
+with open('PythonProject2/city_data.json', 'r') as jsonfile:
+    data = json.load(jsonfile)
+
+data["11"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+
+with open('PythonProject2/city_data.json', 'w') as jsonfile:
+    json.dump(data, jsonfile, indent=2)

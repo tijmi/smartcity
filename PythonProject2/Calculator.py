@@ -56,6 +56,7 @@ class Calculator:
         side_tiles = [] # Tiles to the sides of main tile
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
         fake_tiles = self.city.fake_tiles
+        print(fake_tiles.shape)
         type_coverage30m = { # Temp empty version
             "built_low": 0,
             "built_high": 0,
@@ -83,8 +84,7 @@ class Calculator:
                     else:
                         corner_tiles.append(tile.type)
                 except:
-                    tile_type = fake_tiles[i+ 1, j+ 1]
-                    tile_type = self.data[str(int(tile_type))]
+                    tile_type = fake_tiles[i + 1, j + 1]
 
                     if is_side:
                         side_tiles.append(tile_type)

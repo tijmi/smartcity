@@ -18,7 +18,7 @@ class City:
     # use this when user choose city
     # receive from hardware
     def update_city(self, city_id):
-        with open(" PythonProject2/city_data.json", 'r') as jsonfile:
+        with open("PythonProject2/city_data.json", 'r') as jsonfile:
             data = json.load(jsonfile)
 
             self.population = data[str(city_id)]['population']
@@ -40,10 +40,10 @@ class City:
     
     def fill_fake_tiles(self):
         arr = np.empty((10, 8), dtype=object)
-        right_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
-        left_values = ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water"]
-        top_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
-        bottom_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
+        right_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
+        left_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
+        top_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
+        bottom_values = ["trees", "trees", "trees", "trees", "trees", "trees", "trees", "trees"]
 
         arr[0, :] = top_values      # 10 values
         arr[-1, :] = bottom_values  # 10 values
@@ -85,3 +85,11 @@ class City:
             json.dump(city_json, f, indent=2)
 
         print(f"Saved: {list(city_json.keys())}")
+
+city = City()
+with open("PythonProject2/city_data.json", 'r+') as csvfile:
+    data = json.load(csvfile)
+
+    data["2"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+
+    json.dump(data, csvfile, indent=2)

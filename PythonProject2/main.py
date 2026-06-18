@@ -16,7 +16,8 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type": None,
-    "city_update": None   # city_name or None
+    "city_update": None,   # city_id or None
+    "temperature_update": None # temperature value or None
 }
 state_lock = threading.Lock()
 
@@ -46,6 +47,17 @@ def receive_city_name():
         return jsonify({"status": "ok"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+    
+@app.route('/input/temperature', methods=['POST'])
+def receive_temperature():
+    data = request.get_json()
+    try:
+        temperature = data.get('temperature')
+        with state_lock:
+            state["temperature_update"] = temperature
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
 
 def main():
     tile_manager = TileManager()
@@ -54,19 +66,29 @@ def main():
     heatmap = Heatmap_Creator()
     player_grid_pos = None # Tuple, but None when no player placed
 
+    temperature = 0
+
     while True:
         # Grab and clear any pending updates
         with state_lock:
             tile_id = state.pop("tile_id", None)
             tile_type = state.pop("tile_type", None)
             city_id = state.pop("city_update", None)
+            temperature_update = state.pop("temperature_update", None)
+
+        if temperature_update is not None:
+            print("new temperature")
+            temperature = temperature_update
+
+            # Update calculations and heatmap
+            update_everything(tile_manager, city, temperature, calculator, heatmap)
 
         if city_id is not None:
             print("new city")
             city.update_city(city_id)
 
             # Update calculations and heatmap
-            update_everything(tile_manager, city, calculator, heatmap)
+            update_everything(tile_manager, city, temperature, calculator, heatmap)
 
         if tile_type is not None and tile_id is not None:
             print("new tile")
@@ -84,7 +106,9 @@ def main():
                 player_grid_pos = tile_id # Update player position
 
             # Update calculations and heatmap
-            update_everything(tile_manager, city, calculator, heatmap)
+            update_everything(tile_manager, city, temperature, calculator, heatmap)
+
+            print(tile_id)
 
             # Only output if we know where the player is
             if player_grid_pos is not None:
@@ -95,10 +119,10 @@ def main():
                 send_wind_uhi(url_wind, 0)
                 send_wind_uhi(url_uhi, 0)
 
-def update_everything(tile_manager, city, calculator, heatmap):
+def update_everything(tile_manager, city, temperature, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
-    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
+    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0], temperature)
     heatmap.update_heatmap(all_subtiles)
 
 def get_player_loc_data(player_pos, city, tile_manager):

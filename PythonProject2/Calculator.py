@@ -7,20 +7,21 @@ import json
 class Calculator:
     def __init__(self):
         self.city = 0
+        self.base_temperature = 17 # HAS TO CONTAIN BASE TEMPERATURE CALCULATED
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
-    def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
+    def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing, temperature):
         self.city = city
         self.subtiles = subtiles
         for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):
             for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
-                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing)
+                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing, temperature - self.base_temperature)
                 print(UHI)
                 current_subtile.UHI = UHI
 
-    def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing):
+    def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing, temperature):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.population + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         # max_UHI = -1.605 + (1.062 * math.log10(self.city.city_data[x, y]["population"] + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         if max_UHI < 0: max_UHI = 0
@@ -31,6 +32,8 @@ class Calculator:
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
+
+        # act_UHI += 0.079 * temperature * (self.city.city_data[x, y]["UA"] + tile_soil_sealing) # Add effect of temperature
 
         return act_UHI
 
@@ -45,6 +48,7 @@ class Calculator:
     def calc_type_reduction(self, x, y):
         corner_tiles = [] # Tiles touching corners with main tile
         side_tiles = [] # Tiles to the sides of main tile
+        self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
         fake_tiles = self.city.fake_tiles
         type_coverage30m = { # Temp empty version
             "built_low": 0,
@@ -73,12 +77,9 @@ class Calculator:
                     else:
                         corner_tiles.append(tile.type)
                 except:
-                    tile_type = fake_tiles[i+ 1, j+ 1]
-
-                    with open('PythonProject2/Tile_types.json', 'r') as jsonfile:
-                        data = json.load(jsonfile)
-
-                        tile_type = data[str(int(tile_type))]
+                    fake_i = min(max(i + 1, 0), fake_tiles.shape[0] - 1)
+                    fake_j = min(max(j + 1, 0), fake_tiles.shape[1] - 1)
+                    tile_type = fake_tiles[fake_i, fake_j]
 
                     if is_side:
                         side_tiles.append(tile_type)

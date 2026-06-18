@@ -41,7 +41,7 @@ class City:
     def fill_fake_tiles(self):
         arr = np.empty((10, 8), dtype=object)
         right_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
-        left_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
+        left_values = ["water", "water", "water", "water", "water", "water", "water", "water", "water", "water"]
         top_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
         bottom_values = ["built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low", "built_low"]
 
@@ -86,11 +86,15 @@ class City:
 
         print(f"Saved: {list(city_json.keys())}")
 
-city = City()
-with open('PythonProject2/city_data.json', 'r') as jsonfile:
-    data = json.load(jsonfile)
+# city = City()
+# with open('PythonProject2/city_data.json', 'r') as jsonfile:
+#     data = json.load(jsonfile)
 
-data["1"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+# # data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+# # data["4"]["fake_tiles"] = city.convert_Niels_array(data["4"]["fake_tiles"]).tolist()
 
-with open('PythonProject2/city_data.json', 'w') as jsonfile:
-    json.dump(data, jsonfile, indent=2)
+# # data["4"]["fake_tiles"] = np.rot90(data["4"]["fake_tiles"]).tolist()
+
+# with open('PythonProject2/city_data.json', 'w') as jsonfile:
+#     json.dump(data, jsonfile, indent=2)
+

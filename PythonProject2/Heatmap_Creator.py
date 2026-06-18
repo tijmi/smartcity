@@ -26,7 +26,7 @@ class Heatmap_Creator:
         plt.imshow(
             uhi_grid,
             cmap = "RdYlGn_r",# Green(Low) to Red(High)
-            vmin = 0, vmax = 3.0,# UHI range
+            vmin = 0, vmax = 4.0,# UHI range
             interpolation= "bilinear" # smooth blending between tile edges
         )
         plt.colorbar(label = "UHI (°C)")

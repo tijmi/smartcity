@@ -14,6 +14,7 @@ class City:
         # could depend on actual dataset
         self.wind = 7
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
+        self.city_data =  np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2), dtype=dict)
 
     # use this when user choose city
     # receive from hardware
@@ -25,6 +26,7 @@ class City:
             self.soil_sealing = data[str(city_id)]['soilsealing']
             self.wind = data[str(city_id)]['wind']
             #self.fake_tiles = data[str(city_id)]['fake_tiles']
+            #self.city_data = data[str(city_id)]['city_data']
 
             print(self.population, self.soil_sealing, self.wind)
 

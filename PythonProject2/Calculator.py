@@ -6,7 +6,7 @@ import json
 
 class Calculator:
     def __init__(self):
-        self.city = None
+        self.city = 0
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
     def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
@@ -22,9 +22,12 @@ class Calculator:
 
     def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.population + tile_population)) - (0.356 * self.calc_wind10m(x, y))
+        # max_UHI = -1.605 + (1.062 * math.log10(self.city.city_data[x, y]["population"] + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         if max_UHI < 0: max_UHI = 0
 
         pot_UHI = max_UHI * (self.city.soil_sealing + tile_soil_sealing) / 100
+
+        # pot_UHI = max_UHI * (self.city.city_data[x, y]["soil_sealing"] + tile_soil_sealing) / 100
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
@@ -34,6 +37,9 @@ class Calculator:
 
     def calc_wind10m(self, x, y):
         windspeed10m = self.city.wind * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
+
+        # windspeed10m = self.city.city_data[x, y]["wind"] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
+
         return windspeed10m
 
     def calc_type_reduction(self, x, y):

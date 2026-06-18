@@ -30,6 +30,15 @@ class City:
 
             print(self.population, self.soil_sealing, self.wind)
 
+    def convert_Niels_array(self, arr):
+        # Increase array size
+        arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=0)
+        arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=1)
+
+        arr = arr[2:-2, 2:-2] # Shave off the extra borders
+
+        return arr
+
     # One time working function for importing actual data to JSON file
     def save_to_json(self, csv_path):
         cities = ["DenHaag", "Middelburg", "Eindhoven", "Groningen", "Veluwe"]

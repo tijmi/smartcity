@@ -12,6 +12,9 @@ class Calculator:
         self.city = 0
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
+        with open(TILE_TYPES_PATH, 'r') as jsonfile:
+            self.data = json.load(jsonfile)
+
     def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
         self.city = city
         self.subtiles = subtiles
@@ -77,11 +80,7 @@ class Calculator:
                         corner_tiles.append(tile.type)
                 except:
                     tile_type = fake_tiles[i+ 1, j+ 1]
-
-                    with open(TILE_TYPES_PATH, 'r') as jsonfile:
-                        data = json.load(jsonfile)
-
-                        tile_type = data[str(int(tile_type))]
+                    tile_type = self.data[str(int(tile_type))]
 
                     if is_side:
                         side_tiles.append(tile_type)

@@ -1,8 +1,11 @@
 from Info import type_effect, type_roughness, types, grid_size, subtile_amount
+from pathlib import Path
 import math
 import numpy as np
 import json
 
+BASE_DIR = Path(__file__).parent
+TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
 
 class Calculator:
     def __init__(self):
@@ -75,7 +78,7 @@ class Calculator:
                 except:
                     tile_type = fake_tiles[i+ 1, j+ 1]
 
-                    with open('PythonProject2/Tile_types.json', 'r') as jsonfile:
+                    with open(TILE_TYPES_PATH, 'r') as jsonfile:
                         data = json.load(jsonfile)
 
                         tile_type = data[str(int(tile_type))]

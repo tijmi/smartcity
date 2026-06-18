@@ -4,7 +4,10 @@ import numpy as np
 import math
 
 from Info import grid_size, subtile_amount
+from pathlib import Path
 
+BASE_DIR = Path(__file__).parent
+CITY_DATA_PATH = BASE_DIR / 'city_data.json'
 
 class City:
 
@@ -19,7 +22,7 @@ class City:
     # use this when user choose city
     # receive from hardware
     def update_city(self, city_id):
-        with open('city_data.json', 'r') as jsonfile:
+        with open(CITY_DATA_PATH, 'r') as jsonfile:
             data = json.load(jsonfile)
 
             self.population = data[str(city_id)]['population']

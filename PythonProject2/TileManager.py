@@ -11,9 +11,7 @@ class TileManager:
         self.tiles = np.empty(shape=grid_size, dtype=object)
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
-                self.tiles[i, j] = Tile((i, j), random.randint(0, 7))
-
-        self.tile_population = 0
+                self.tiles[i, j] = Tile((i, j), random.randint(0, 7)) # Place random tile in each position
 
 
     def update_tile(self, position, type):
@@ -23,9 +21,7 @@ class TileManager:
 
         print(x, y)
 
-        self.tile_population -= self.tiles[x, y].population # Remove population addition of that tile
-        self.tiles[x, y] = Tile((x, y), type)
-        self.tile_population += self.tiles[x, y].population # Add population of that tile
+        self.tiles[x, y] = Tile((x, y), type) # Place new tile
 
     def get_subtiles(self):
         # Make empty subtiles array
@@ -39,3 +35,11 @@ class TileManager:
                 subtiles[x, y] = subtile
 
         return subtiles
+    
+    def get_soil_population(self):
+        tile_population = 0
+        tile_soil_sealing = 0
+        for tile in self.tiles.flat:
+            tile_population += tile.population
+            tile_soil_sealing += tile.soil_sealing
+        return tile_soil_sealing, tile_population

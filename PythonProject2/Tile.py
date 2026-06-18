@@ -14,6 +14,7 @@ class Tile:
             self.type = data[str(type)]
 
         self.population = 0
+        self.soil_sealing = 0
 
         # Generate subtiles
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)), int(math.sqrt(subtile_amount))), dtype=object)
@@ -21,3 +22,4 @@ class Tile:
             for y in range(int(math.sqrt(subtile_amount))):
                 self.subtiles[x, y] = Subtile(self.type, (x, y), self.grid_pos)
                 self.population += self.subtiles[x, y].population
+                self.soil_sealing += self.subtiles[x, y].soil_sealing

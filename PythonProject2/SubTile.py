@@ -9,8 +9,13 @@ class Subtile:
         self.UHI = 0
 
         self.population = 0
-        if type == "built_low": self.population = 4
-        if type == "built_high": self.population = 10
+        self.soil_sealing = 0
+        if type == "built_low": 
+            self.population = 7
+            self.soil_sealing = 0.128
+        if type == "built_high": 
+            self.population = 10
+            self.soil_sealing = 0.128
 
     def get_total_subtile(self, tile_pos):
         s_amount = int(math.sqrt(subtile_amount))

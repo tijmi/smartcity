@@ -9,22 +9,22 @@ class Calculator:
         self.city = None
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
-    def update_calculation(self, city, subtiles, tile_population):
+    def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
         self.city = city
         self.subtiles = subtiles
         for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):
             for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
-                UHI = self.calc_act_UHI(x, y, tile_population)
+                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing)
                 print(UHI)
                 current_subtile.UHI = UHI
 
-    def calc_act_UHI(self, x, y, tile_population):
+    def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.population + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         if max_UHI < 0: max_UHI = 0
 
-        pot_UHI = max_UHI * self.city.soil_sealing / 100
+        pot_UHI = max_UHI * (self.city.soil_sealing + tile_soil_sealing) / 100
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)

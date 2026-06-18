@@ -98,7 +98,7 @@ def main():
 def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
-    calculator.update_calculation(city, all_subtiles, tile_manager.tile_population)
+    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     heatmap.update_heatmap(all_subtiles)
 
 def get_player_loc_data(player_pos, city, tile_manager):

@@ -5,7 +5,6 @@ import math
 
 from Info import grid_size, subtile_amount
 
-
 class City:
 
     def __init__(self):
@@ -19,7 +18,7 @@ class City:
     # use this when user choose city
     # receive from hardware
     def update_city(self, city_id):
-        with open('PythonProject2/city_data.json', 'r') as jsonfile:
+        with open(" PythonProject2/city_data.json", 'r') as jsonfile:
             data = json.load(jsonfile)
 
             self.population = data[str(city_id)]['population']

@@ -1,14 +1,20 @@
 from Info import type_effect, type_roughness, types, grid_size, subtile_amount
+from pathlib import Path
 import math
 import numpy as np
 import json
 
+BASE_DIR = Path(__file__).parent
+TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
 
 class Calculator:
     def __init__(self):
         self.city = 0
         self.base_temperature = 17 # HAS TO CONTAIN BASE TEMPERATURE CALCULATED
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
+
+        with open(TILE_TYPES_PATH, 'r') as jsonfile:
+            self.data = json.load(jsonfile)
 
     def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing, temperature):
         self.city = city
@@ -77,9 +83,8 @@ class Calculator:
                     else:
                         corner_tiles.append(tile.type)
                 except:
-                    fake_i = min(max(i + 1, 0), fake_tiles.shape[0] - 1)
-                    fake_j = min(max(j + 1, 0), fake_tiles.shape[1] - 1)
-                    tile_type = fake_tiles[fake_i, fake_j]
+                    tile_type = fake_tiles[i+ 1, j+ 1]
+                    tile_type = self.data[str(int(tile_type))]
 
                     if is_side:
                         side_tiles.append(tile_type)

@@ -85,11 +85,3 @@ class City:
             json.dump(city_json, f, indent=2)
 
         print(f"Saved: {list(city_json.keys())}")
-
-city = City()
-with open("PythonProject2/city_data.json", 'r+') as csvfile:
-    data = json.load(csvfile)
-
-    data["2"]["fake_tiles"] = city.fill_fake_tiles().tolist()
-
-    json.dump(data, csvfile, indent=2)

@@ -3,17 +3,16 @@
   "1": "built_low",
   "2": "built_high",
   "3": "trees",
-  "4": "shrubs",
-  "5": "low_veg",
-  "6": "water",
-  "7": "farmland",
+  "4": "low_veg",
+  "5": "water",
+  "6": "farmland",
 
-  "8": "bare_soil_char",
-  "9": "built_low_char",
-  "10": "built_high_char",
-  "11": "trees_char",
-  "12": "shrubs_char",
-  "13": "low_veg_char",
-  "14": "water_char",
-  "15": "farmland_char"
+  "7": "built_low_char",
+  "8": "built_high_char",
+  "9": "appartment_char",
+  "10": "canals_char",
+  "11": "lakes_char",
+  "12": "parks_char",
+  "13": "forests_char",
+  "14": "farmland_char"
 }

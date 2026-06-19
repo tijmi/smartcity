@@ -22,37 +22,26 @@ state = {
 }
 state_lock = threading.Lock()
 
-
-@app.route('/input/tile_information', methods=['POST'])
-def receive_tile_data():
+# Receive data
+@app.route('/input', methods=['POST'])
+def receive_data():
     data = request.get_json()
     print(data)
-    try:
+    try: # Try for tile data
         tile_id = data.get('tile_id')
         tile_type = data.get('tile_type')
         with state_lock:
             state["tile_type"] = tile_type
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
-
-
-@app.route('/input/city_location', methods=['POST'])
-def receive_city_name():
-    data = request.get_json()
-    try:
-        city_name = data.get('city_location')
+    except: pass
+    try:# Else, try for city data
+        city_id = data.get('city_location')
         with state_lock:
-            state["city_update"] = city_name
+            state["city_update"] = city_id
         return jsonify({"status": "ok"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
-    
-@app.route('/input/month', methods=['POST'])
-def receive_month():
-    data = request.get_json()
-    try:
+    except: pass
+    try:# Else, try for month data
         month = data.get('month')
         with state_lock:
             state["month_update"] = month
@@ -105,7 +94,7 @@ def main():
             if tile_type <= 7:  # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
             else:  # if character
-                tile_type -= 7
+                tile_type -= 8
                 tile_manager.update_tile(tile_id, tile_type)
                 player_id = tile_id # Update player position
 

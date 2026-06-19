@@ -68,20 +68,15 @@ class City:
                     print(f"{city_name} is not in cities list, check list first")
                     continue
 
-                city = City()
-                city.population = int(row['population'])
-                city.soil_sealing = float(row['soil'])
-                city.wind = row['wind']
-
                 city_json[city_name] = {
-                    'population': city.population,
-                    'soil': city.soil_sealing,
-                    'wind': city.wind
+                    'population': int(row['population']),
+                    'soil': float(row['soil']),
+                    'wind': row['wind']
                 }
 
 
 
-        with open('city_data.json', 'w') as f:
+        with open('city_import_test.json', 'w') as f:
             json.dump(city_json, f, indent=2)
 
         print(f"Saved: {list(city_json.keys())}")

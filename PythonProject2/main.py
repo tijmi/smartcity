@@ -77,14 +77,14 @@ def main():
             update_everything(tile_manager, city, temperature, calculator, heatmap)
 
         if city_id is not None:
-            print("new city")
+            print("new city received")
             city.update_city(city_id)
 
             # Update calculations and heatmap
             update_everything(tile_manager, city, temperature, calculator, heatmap)
 
         if tile_type is not None and tile_id is not None:
-            print("new tile")
+            print("new tile received")
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
@@ -106,12 +106,14 @@ def main():
                 send_wind_uhi_death(url_wind, output["wind"])
                 send_wind_uhi_death(url_uhi, output["uhi"])
                 send_wind_uhi_death(url_death, output["death"])
+                print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
                 # SEND TO UNITY AS WELL
             else:
                 send_wind_uhi_death(url_wind, 0)
                 send_wind_uhi_death(url_uhi, 0)
                 send_wind_uhi_death(url_death, 0)
+                print(f"output: 0, 0, 0")
 
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
     # Update calculations and heatmap

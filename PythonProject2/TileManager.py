@@ -19,7 +19,7 @@ class TileManager:
         x = math.floor(position % grid_size[0])
         y = math.floor(position // grid_size[0])
 
-        print(x, y)
+        print(f"tile_location: {x}, {y}")
 
         self.tiles[x, y] = Tile((x, y), type) # Place new tile
 

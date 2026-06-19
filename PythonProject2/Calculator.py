@@ -24,7 +24,6 @@ class Calculator:
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
                 UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing, temperature - self.base_temperature)
-                print(UHI)
                 current_subtile.UHI = UHI
 
     def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing, temperature):
@@ -103,8 +102,6 @@ class Calculator:
         for tile_type in side_tiles:
             if tile_type in types: type_coverage30m[tile_type] += 13.74
         type_coverage30m[self.subtiles[x, y].type] += 14.2
-
-        print(f"coordinates: {x, y} this {type_coverage30m}")
 
         # Calculate type reduction
         total = 0

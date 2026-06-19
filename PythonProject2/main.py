@@ -99,8 +99,8 @@ def main():
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
-                send_wind_uhi(url_wind, 0)
-                send_wind_uhi(url_uhi, 0)
+                send_wind_uhi_death(url_wind, 0)
+                send_wind_uhi_death(url_uhi, 0)
 
             if tile_type <= 7:  # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
@@ -115,16 +115,15 @@ def main():
             # Only output if we know where the player is
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
-                send_wind_uhi(url_wind, output["wind"])
-                send_wind_uhi(url_uhi, output["uhi"])
-                send_wind_uhi(url_death, output["death"])
+                send_wind_uhi_death(url_wind, output["wind"])
+                send_wind_uhi_death(url_uhi, output["uhi"])
+                send_wind_uhi_death(url_death, output["death"])
 
                 # SEND TO UNITY AS WELL
             else:
-                output = build_player_output(0, tile_manager, city, temperature, death)
-                send_wind_uhi(url_wind, output["wind"])
-                send_wind_uhi(url_uhi, output["uhi"])
-                send_wind_uhi(url_death, output["death"])
+                send_wind_uhi_death(url_wind, 0)
+                send_wind_uhi_death(url_uhi, 0)
+                send_wind_uhi_death(url_death, 0)
 
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
     # Update calculations and heatmap
@@ -139,7 +138,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
     y = int(player_id // grid_size[1])
 
 
-    uhi, wind, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature, death)
+    wind, uhi, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature, death)
 
     tile = tile_manager.tiles[x, y]
 
@@ -186,7 +185,7 @@ def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
 
     return average_wind, average_UHI, death_to_UHI
 
-def send_wind_uhi(url, payload):
+def send_wind_uhi_death(url, payload):
     try:
         resp = requests.post(url, json= payload, timeout=1)
     except Exception as e:

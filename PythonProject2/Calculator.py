@@ -56,16 +56,22 @@ class Calculator:
         side_tiles = [] # Tiles to the sides of main tile
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
         fake_tiles = self.city.fake_tiles
-        print(fake_tiles.shape)
         type_coverage30m = { # Temp empty version
             "built_low": 0,
             "built_high": 0,
             "trees": 0,
-            "shrubs": 0,
             "low_veg": 0,
             "water": 0,
             "farmland": 0,
-            "bare_soil": 0
+            "bare_soil": 0,
+            "built_low_char": 0,
+            "built_high_char": 0,
+            "appartment_char": 0,
+            "canals_char": 0,
+            "lakes_char": 0,
+            "parks_char": 0,
+            "forests_char": 0,
+            "farmland_char": 0
         }
 
         # Gather all the types corner- and side-connected neighbours

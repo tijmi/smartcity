@@ -91,10 +91,9 @@ def main():
                 send_wind_uhi_death(url_wind, 0)
                 send_wind_uhi_death(url_uhi, 0)
 
-            if tile_type <= 7:  # if not a character
+            if tile_type <= 6:  # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
             else:  # if character
-                tile_type -= 8
                 tile_manager.update_tile(tile_id, tile_type)
                 player_id = tile_id # Update player position
 

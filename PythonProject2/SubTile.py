@@ -10,10 +10,10 @@ class Subtile:
 
         self.population = 0
         self.soil_sealing = 0
-        if type == "built_low": 
+        if type == "built_low" or type == "built_low_char": 
             self.population = 7
             self.soil_sealing = 0.128
-        if type == "built_high": 
+        if type == "built_high" or type == "built_high_char" or type == "appartment_char": 
             self.population = 10
             self.soil_sealing = 0.128
 

@@ -3,12 +3,13 @@ from Calculator import Calculator
 from City import City
 from Heatmap_Creator import Heatmap_Creator
 from Info import subtile_amount, grid_size
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 import threading
 import requests
 
 url_uhi = "http://192.168.1.3:5000/output/uhi"
 url_wind = "http://192.168.1.3:5000/output/wind"
+url_death = "http://192.168.1.3:5000/output/death"
 
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ state = {
     "tile_id": None,
     "tile_type": None,
     "city_update": None,   # city_id or None
-    "temperature_update": None # temperature value or None
+    "month_update": None # temperature value or None
 }
 state_lock = threading.Lock()
 
@@ -48,13 +49,13 @@ def receive_city_name():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
     
-@app.route('/input/temperature', methods=['POST'])
-def receive_temperature():
+@app.route('/input/month', methods=['POST'])
+def receive_month():
     data = request.get_json()
     try:
-        temperature = data.get('temperature')
+        month = data.get('month')
         with state_lock:
-            state["temperature_update"] = temperature
+            state["month_update"] = month
         return jsonify({"status": "ok"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
@@ -74,11 +75,14 @@ def main():
             tile_id = state.pop("tile_id", None)
             tile_type = state.pop("tile_type", None)
             city_id = state.pop("city_update", None)
-            temperature_update = state.pop("temperature_update", None)
+            month = state.pop("month_update", None)
 
-        if temperature_update is not None:
-            print("new temperature")
-            temperature = temperature_update
+        if month is not None:
+            print("new month received")
+            with open("PythonProject2/month_data.json", 'r') as jsonfile:
+                month_data = json.load(jsonfile)
+                temperature = month_data["month"]["temperature"]
+                death = month_data["month"]["death"]
 
             # Update calculations and heatmap
             update_everything(tile_manager, city, temperature, calculator, heatmap)
@@ -110,14 +114,17 @@ def main():
 
             # Only output if we know where the player is
             if player_grid_pos is not None:
-                output = build_player_output(player_grid_pos, tile_manager, city)
+                output = build_player_output(player_grid_pos, tile_manager, city, temperature, death)
                 send_wind_uhi(url_wind, output["wind"])
                 send_wind_uhi(url_uhi, output["uhi"])
+                send_wind_uhi(url_death, output["death"])
 
                 # SEND TO UNITY AS WELL
             else:
-                send_wind_uhi(url_wind, 0)
-                send_wind_uhi(url_uhi, 0)
+                output = build_player_output((0, 0), tile_manager, city, temperature, death)
+                send_wind_uhi(url_wind, output["wind"])
+                send_wind_uhi(url_uhi, output["uhi"])
+                send_wind_uhi(url_death, output["death"])
 
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
     # Update calculations and heatmap
@@ -125,28 +132,10 @@ def update_everything(tile_manager, city, temperature, calculator, heatmap):
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0], temperature)
     heatmap.update_heatmap(all_subtiles)
 
-def get_player_loc_data(player_pos, city, tile_manager):
-    # Get UHI and wind data at player location
-    wind_data = city.wind
-
-    total_wind = 0
-
-    tile = tile_manager.tiles[player_pos % grid_size[0], player_pos // grid_size[1]] # Tile of player
-    total_UHI = 0
-    for subtile in tile.subtiles.flat: # For each subtile within the player's tile
-        total_UHI += subtile.UHI # Get subtile UHI
-        total_wind += wind_data # Get subtile wind
-
-    # Final data to output
-    average_UHI = total_UHI / subtile_amount
-    average_wind = total_wind / subtile_amount
-
-    return average_wind, average_UHI
-
 
 # Collect all player output data and return
-def build_player_output(player_pos, tile_manager, city):
-    uhi, wind = get_player_loc_data(player_pos, city, tile_manager)
+def build_player_output(player_pos, tile_manager, city, temperature, death):
+    uhi, wind, death_to_UHI = get_player_loc_data(player_pos, city, tile_manager, temperature, death)
 
     x = int(player_pos % grid_size[0])
     y = int(player_pos // grid_size[1])
@@ -163,12 +152,38 @@ def build_player_output(player_pos, tile_manager, city):
         "uhi": uhi,
         "wind": wind,
         "land_use": tile.type,
+        "death": death_to_UHI,
         "neighbors":{
             "front": get_neighbor_type(x-1, y),
             "left": get_neighbor_type(x, y-1),
             "right": get_neighbor_type(x, y+1),
         }
     }
+
+def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
+    # Get UHI and wind data at player location
+    wind_data = city.wind
+
+    total_wind = 0
+
+    tile = tile_manager.tiles[player_pos % grid_size[0], player_pos // grid_size[1]] # Tile of player
+    total_UHI = 0
+    for subtile in tile.subtiles.flat: # For each subtile within the player's tile
+        total_UHI += subtile.UHI # Get subtile UHI
+        total_wind += wind_data # Get subtile wind
+
+    # Final data to output
+    average_UHI = total_UHI / subtile_amount
+    average_wind = total_wind / subtile_amount
+
+    if temperature > 22:
+        death_to_UHI = int(death * (0.0284 * average_UHI))
+    elif temperature > 16:
+        death_to_UHI = int(death * (0.0157 * average_UHI))
+    else:
+        death_to_UHI = 0
+
+    return average_wind, average_UHI, death_to_UHI
 
 def send_wind_uhi(url, payload):
     try:

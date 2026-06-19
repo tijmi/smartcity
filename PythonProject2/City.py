@@ -71,7 +71,8 @@ class City:
                 city_json[city_name] = {
                     'population': int(row['population']),
                     'soil': float(row['soil']),
-                    'wind': row['wind']
+                    'wind': float(row['wind']),
+                    'UA': float(row['UA']),
                 }
 
 

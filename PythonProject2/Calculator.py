@@ -17,6 +17,7 @@ class Calculator:
             self.data = json.load(jsonfile)
 
     def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing, temperature):
+        print("updating calculations")
         self.city = city
         self.subtiles = subtiles
         for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):

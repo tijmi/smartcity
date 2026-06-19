@@ -113,6 +113,8 @@ def main():
                 output = build_player_output(player_grid_pos, tile_manager, city)
                 send_wind_uhi(url_wind, output["wind"])
                 send_wind_uhi(url_uhi, output["uhi"])
+
+                # SEND TO UNITY AS WELL
             else:
                 send_wind_uhi(url_wind, 0)
                 send_wind_uhi(url_uhi, 0)

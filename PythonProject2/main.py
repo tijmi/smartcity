@@ -26,28 +26,32 @@ state_lock = threading.Lock()
 @app.route('/input', methods=['POST'])
 def receive_data():
     data = request.get_json()
+    if not isinstance(data, dict):
+        return jsonify({"status": "error", "message": "Expected JSON object"}), 400
+
     print(data)
-    try: # Try for tile data
+
+    if 'tile_id' in data and 'tile_type' in data:
         tile_id = data.get('tile_id')
         tile_type = data.get('tile_type')
         with state_lock:
             state["tile_type"] = tile_type
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
-    except: pass
-    try:# Else, try for city data
+
+    if 'city_location' in data:
         city_id = data.get('city_location')
         with state_lock:
             state["city_update"] = city_id
         return jsonify({"status": "ok"})
-    except: pass
-    try:# Else, try for month data
+
+    if 'month' in data:
         month = data.get('month')
         with state_lock:
             state["month_update"] = month
         return jsonify({"status": "ok"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 400
+
+    return jsonify({"status": "error", "message": "Unknown payload shape"}), 400
 
 def main():
     tile_manager = TileManager()

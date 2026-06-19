@@ -82,17 +82,20 @@ class City:
 
         print(f"Saved: {list(city_json.keys())}")
 
-city = City()
-with open('PythonProject2/city_data.json', 'r') as jsonfile:
-    data = json.load(jsonfile)
+# Always comment this code:
 
-# data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
-# data["4"]["fake_tiles"] = city.convert_Niels_array(data["4"]["fake_tiles"]).tolist()
+# city = City()
+# with open('PythonProject2/city_data.json', 'r') as jsonfile:
+#     data = json.load(jsonfile)
 
-#     data["4"]["city_data"] = np.load('PythonProject2/grid_data_Scheveningen.npy', allow_pickle=True).tolist()
-#     json.dump(data, open('PythonProject2/city_import_test.json', 'w'))
+# # data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+# # data["4"]["city_data"] = city.convert_Niels_array(data["4"]["city_data"]).tolist()
 
-# # data["4"]["fake_tiles"] = np.rot90(data["4"]["fake_tiles"]).tolist()
+# # data["4"]["city_data"] = np.rot90(data["4"]["city_data"]).tolist()
+
+# # Import data initially
+# # data["4"]["city_data"] = np.load('PythonProject2/grid_data_Scheveningen.npy', allow_pickle=True).tolist()
+# # json.dump(data, open('PythonProject2/city_import_test.json', 'w'))
 
 # with open('PythonProject2/city_data.json', 'w') as jsonfile:
 #     json.dump(data, jsonfile, indent=2)

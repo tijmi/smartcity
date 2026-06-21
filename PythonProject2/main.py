@@ -105,8 +105,8 @@ def main():
                 tile_manager.update_tile(tile_id, tile_type)
                 player_id = tile_id # Update player position
 
-            # Update Calculations, Heatmap and Player data if update was received
-        if tile_type is not None or tile_id is not None or month is not None or city is not None:
+        # Update Calculations, Heatmap and Player data if update was received
+        if tile_type is not None or tile_id is not None or month is not None or city_id is not None:
             update_everything(tile_manager, city, temperature, calculator, heatmap) # Update calculations and heatmap
 
             # Only output if we know where the player is
@@ -157,7 +157,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
 
 def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
     # Get UHI and wind data at player location
-    wind_data = city.wind
+    wind_data = city.city_data[player_pos[0]][player_pos[1]]["ws_100m_alt"]
 
     total_wind = 0
 
@@ -195,7 +195,7 @@ def detect_fake_input():
             state["tile_id"] = random.randint(0, 47) # Random location
     if keyboard.is_pressed('c'):
         with state_lock:
-            state["city_update"] = random.randint(0, 10) # Random city
+            state["city_update"] = random.randint(0, 9) # Random city
     if keyboard.is_pressed('m'):
         with state_lock:
             state["month_update"] = random.randint(1, 12) # Random month

@@ -26,7 +26,7 @@ class City:
         arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=0)
         arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=1)
 
-        arr = arr[2:-2, 2:-2] # Shave off the extra borders
+        # arr = arr[2:-2, 2:-2] # Shave off the extra borders
 
         return arr
     
@@ -77,18 +77,17 @@ class City:
 # Always comment this code:
 
 # city = City()
-# with open('PythonProject2/city_data.json', 'r') as jsonfile:
+# with open('city_data.json', 'r') as jsonfile:
 #     data = json.load(jsonfile)
-
+#
 # # data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
 # # data["4"]["city_data"] = city.convert_Niels_array(data["4"]["city_data"]).tolist()
-
+# #
 # # data["4"]["city_data"] = np.rot90(data["4"]["city_data"]).tolist()
-
+#
 # # Import data initially
-# # data["4"]["city_data"] = np.load('PythonProject2/grid_data_Scheveningen.npy', allow_pickle=True).tolist()
-# # json.dump(data, open('PythonProject2/city_import_test.json', 'w'))
-
-# with open('PythonProject2/city_data.json', 'w') as jsonfile:
+# # data["0"]["city_data"] = np.load('grid_data_Eindhoven.npy', allow_pickle=True).tolist()
+#
+# with open('city_data.json', 'w') as jsonfile:
 #     json.dump(data, jsonfile, indent=2)
 

@@ -7,10 +7,13 @@ from flask import Flask, json, request, jsonify
 import threading
 import requests
 from pathlib import Path
+import keyboard
+import random
 
 url_uhi = "http://192.168.1.3:5000/output/uhi"
 url_wind = "http://192.168.1.3:5000/output/wind"
 url_death = "http://192.168.1.3:5000/output/death"
+allow_fake_input = True
 
 app = Flask(__name__)
 
@@ -18,8 +21,8 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type": None,
-    "city_update": 0,   # city_id or None
-    "month_update": 1 # temperature value or None
+    "city_update": 0, # start in Eindhoven
+    "month_update": 1 # start in January
 }
 state_lock = threading.Lock()
 
@@ -64,6 +67,9 @@ def main():
     temperature = 0
 
     while True:
+
+        if allow_fake_input: detect_fake_input() # Check for manual fake input
+
         # Grab and clear any pending updates
         with state_lock:
             tile_id = state.pop("tile_id", None)
@@ -78,15 +84,9 @@ def main():
                 temperature = month_data[str(month)]["temperature"]
                 death = month_data[str(month)]["death"]
 
-            # Update calculations and heatmap
-            update_everything(tile_manager, city, temperature, calculator, heatmap)
-
         if city_id is not None:
             print("new city received")
             city.update_city(city_id)
-
-            # Update calculations and heatmap
-            update_everything(tile_manager, city, temperature, calculator, heatmap)
 
         if tile_type is not None and tile_id is not None:
             print("new tile received")
@@ -95,6 +95,9 @@ def main():
                 player_id = None
                 send_wind_uhi_death(url_wind, 0)
                 send_wind_uhi_death(url_uhi, 0)
+                send_wind_uhi_death(url_death, 0)
+
+                print("Output: 0, 0, 0")
 
             if tile_type <= 6:  # if not a character
                 tile_manager.update_tile(tile_id, tile_type)
@@ -102,22 +105,19 @@ def main():
                 tile_manager.update_tile(tile_id, tile_type)
                 player_id = tile_id # Update player position
 
-            # Update calculations and heatmap
-            update_everything(tile_manager, city, temperature, calculator, heatmap)
+            # Update Calculations, Heatmap and Player data if update was received
+        if tile_type is not None or tile_id is not None or month is not None or city is not None:
+            update_everything(tile_manager, city, temperature, calculator, heatmap) # Update calculations and heatmap
 
             # Only output if we know where the player is
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
-                send_wind_uhi_death(url_wind, output["wind"])
-                send_wind_uhi_death(url_uhi, output["uhi"])
-                send_wind_uhi_death(url_death, output["death"])
+                send_wind_uhi_death(output["wind"], output["uhi"], output["death"])
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
                 # SEND TO UNITY AS WELL
             else:
-                send_wind_uhi_death(url_wind, 0)
-                send_wind_uhi_death(url_uhi, 0)
-                send_wind_uhi_death(url_death, 0)
+                send_wind_uhi_death(0, 0, 0)
                 print(f"output: 0, 0, 0")
 
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
@@ -180,11 +180,29 @@ def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
 
     return average_wind, average_UHI, death_to_UHI
 
-def send_wind_uhi_death(url, payload):
+def send_wind_uhi_death(wind, uhi, death):
     try:
-        resp = requests.post(url, json= payload, timeout=1)
+        resp = requests.post(url_uhi, json= uhi, timeout=1)
+        resp = requests.post(url_wind, json= wind, timeout=1)
+        resp = requests.post(url_death, json= death, timeout=1)
     except Exception as e:
         print(f"error {e}")
+
+def detect_fake_input():
+    if keyboard.is_pressed('t'):
+        with state_lock:
+            state["tile_type"] = random.randint(0, 6) # Random tile type
+            state["tile_id"] = random.randint(0, 47) # Random location
+    if keyboard.is_pressed('c'):
+        with state_lock:
+            state["city_update"] = random.randint(0, 10) # Random city
+    if keyboard.is_pressed('m'):
+        with state_lock:
+            state["month_update"] = random.randint(1, 12) # Random month
+    if keyboard.is_pressed('p'):
+        with state_lock:
+            state["tile_type"] = random.randint(7, 14) # Random character tile
+            state["tile_id"] = random.randint(0, 47) # Random location
 
 if __name__ == '__main__':
     flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000, debug=False), daemon=True)

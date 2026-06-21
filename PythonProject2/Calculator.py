@@ -24,30 +24,28 @@ class Calculator:
             for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
-                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing, temperature - self.base_temperature)
+                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing, temperature)
                 current_subtile.UHI = UHI
 
     def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing, temperature):
-        max_UHI = -1.605 + (1.062 * math.log10(self.city.population + tile_population)) - (0.356 * self.calc_wind10m(x, y))
-        # max_UHI = -1.605 + (1.062 * math.log10(self.city.city_data[x, y]["population"] + tile_population)) - (0.356 * self.calc_wind10m(x, y))
+        max_UHI = -1.605 + (1.062 * math.log10(self.city.city_data[x][y]["pop_10km"] + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         if max_UHI < 0: max_UHI = 0
 
-        pot_UHI = max_UHI * (self.city.soil_sealing + tile_soil_sealing) / 100
-
-        # pot_UHI = max_UHI * (self.city.city_data[x, y]["soil_sealing"] + tile_soil_sealing) / 100
+        pot_UHI = max_UHI * (self.city.city_data[x][y]["ss_1km"] + tile_soil_sealing) / 100
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
 
-        # act_UHI += 0.079 * temperature * (self.city.city_data[x, y]["UA"] + tile_soil_sealing) # Add effect of temperature
+        d_temperature = temperature - self.base_temperature # Get delta temp
+        if d_temperature < 0: d_temperature = 0 # Not negative
+
+        act_UHI += 0.079 * temperature * (self.city.city_data[x][y]["ss_1km"] + tile_soil_sealing) # Add effect of temperature
 
         return act_UHI
 
 
     def calc_wind10m(self, x, y):
-        windspeed10m = self.city.wind * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
-
-        # windspeed10m = self.city.city_data[x, y]["wind"] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
+        windspeed10m = self.city.city_data[x][y]["ws_100m_alt"] * math.log(10 / type_roughness[self.subtiles[x, y].type]) / math.log(100 / type_roughness[self.subtiles[x, y].type])
 
         return windspeed10m
 

@@ -9,10 +9,6 @@ from Info import grid_size, subtile_amount
 class City:
 
     def __init__(self):
-        self.population = 250000
-        self.soil_sealing = 87
-        # could depend on actual dataset
-        self.wind = 7
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
         self.city_data =  np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2), dtype=dict)
 
@@ -22,13 +18,8 @@ class City:
         with open(Path(__file__).parent / "city_data.json", 'r') as jsonfile:
             data = json.load(jsonfile)
 
-            self.population = data[str(city_id)]['population']
-            self.soil_sealing = data[str(city_id)]['soilsealing']
-            self.wind = data[str(city_id)]['wind']
             self.fake_tiles = np.array(data[str(city_id)]['fake_tiles'], dtype=object)
-            #self.city_data = data[str(city_id)]['city_data']
-
-            print(self.population, self.soil_sealing, self.wind)
+            self.city_data = data[str(city_id)]['city_data']
 
     def convert_Niels_array(self, arr):
         # Increase array size

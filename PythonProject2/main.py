@@ -6,6 +6,7 @@ from Info import subtile_amount, grid_size
 from flask import Flask, json, request, jsonify
 import threading
 import requests
+from pathlib import Path
 
 url_uhi = "http://192.168.1.3:5000/output/uhi"
 url_wind = "http://192.168.1.3:5000/output/wind"
@@ -17,7 +18,7 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type": None,
-    "city_update": None,   # city_id or None
+    "city_update": 0,   # city_id or None
     "month_update": 1 # temperature value or None
 }
 state_lock = threading.Lock()
@@ -72,7 +73,7 @@ def main():
 
         if month is not None:
             print("new month received")
-            with open("PythonProject2/month_data.json", 'r') as jsonfile:
+            with open(Path(__file__).parent / "month_data.json", 'r') as jsonfile:
                 month_data = json.load(jsonfile)
                 temperature = month_data[str(month)]["temperature"]
                 death = month_data[str(month)]["death"]

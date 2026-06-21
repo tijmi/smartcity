@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Info import grid_size, subtile_amount
 import math
+from pathlib import Path
+
 class Heatmap_Creator:
 
     def __init__(self):
@@ -34,4 +36,4 @@ class Heatmap_Creator:
         plt.tight_layout()
         plt.draw()
         plt.pause(0.01)
-        plt.savefig("PythonProject2/heatmap.png")
+        plt.savefig(Path(__file__).parent / "heatmap.png")

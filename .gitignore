@@ -35,5 +35,24 @@ coverage/
 ## Misc
 *.tmp
 *.bak
-[Ll]library/
-[Tt]temp/
+
+## Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+Assets/AssetStoreTools*
+*.apiupaterconfigs

@@ -125,7 +125,7 @@ def main():
                 send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
-def update_everything(tile_manager, city, temperature, calculator, heatmap):
+def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])

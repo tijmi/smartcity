@@ -3,6 +3,11 @@
 Thumbs.db
 
 # Editor/IDE
+## OS files
+.DS_Store
+Thumbs.db
+
+## Editor settings
 .vscode/
 .idea/
 *.swp
@@ -25,6 +30,21 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*~
+
+## Logs
+*.log
+
+## Environment files
+.env
+.env.*
+
+## Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
 .venv/
 venv/
 env/
@@ -47,3 +67,12 @@ temp/
 *.pid
 *.npy
 PythonProject2/heatmap.png
+## Node / frontend
+node_modules/
+dist/
+build/
+coverage/
+
+## Misc
+*.tmp
+*.bak

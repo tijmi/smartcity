@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// Not use
 public class UHILightController : MonoBehaviour
 {
     [Tooltip("Drag the light's HeatLightController here")]

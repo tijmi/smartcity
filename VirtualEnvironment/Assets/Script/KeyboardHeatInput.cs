@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// Not use
 public class KeyboardHeatInput : MonoBehaviour
 {
     [Tooltip("Drag the light's HeatLightController here")]

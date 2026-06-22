@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 [Serializable]
 public class PlayerData
@@ -34,17 +39,31 @@ public class ServerNetworking : MonoBehaviour
     readonly object lockObj = new object();
 
     [SerializeField]
-    private string url = "http://192.168.1.1:5000/input";
+    private string url = "http://145.126.57.1:5000/input";
 
-    [SerializeField]
-    public HeatLightController heatLightController;
+    [SerializeField] public List<HeatLightController> heatLightControllers = new List<HeatLightController>();
+    [SerializeField] public SceneController sceneController;
+    [SerializeField] public TMP_Text UHI;
 
     [Tooltip("If true, smoothly transitions to the target value instead of snapping instantly")]
     public bool smoothTransition = true;
     public float transitionSpeed = 3f;
 
+    public static ServerNetworking Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else Destroy(gameObject);
+    }
+
+
     void Start()
     {
+        sceneController.OnSceneUpdated += UpdateHeatLightControllers;
+
         udp = new UdpClient(5005);
         thread = new Thread(() => {
             IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
@@ -63,6 +82,14 @@ public class ServerNetworking : MonoBehaviour
 
     void Update()
     {
+        // Test code
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            string testJson = "{\"uhi\":2.5,\"wind\":3.0,\"land_use\":\"trees\",\"death\":10,\"neighbors\":{\"front\":\"trees\",\"left\":\"water\",\"right\":\"built_low\"}}";
+            PlayerData testData = JsonUtility.FromJson<PlayerData>(testJson);
+            ShareData(testData);
+        }
+
         string json;
         lock (lockObj)
         {
@@ -72,8 +99,16 @@ public class ServerNetworking : MonoBehaviour
         if (json != null)
         {
             PlayerData playerData = JsonUtility.FromJson<PlayerData>(json);
-            lastData = playerData;
-            ShareData(playerData);
+            if(lastData == playerData)
+            {
+                return;
+            }
+            else
+            {
+                lastData = playerData;
+                ShareData(playerData);
+            }
+                
         }
     }
 
@@ -88,16 +123,52 @@ public class ServerNetworking : MonoBehaviour
 
 
         // send uhi to HeatLightController
-        if (smoothTransition)
+        foreach (HeatLightController hlc in heatLightControllers)
         {
-            // Smoothly move heatLevel toward the target each frame
-            float newHeat = Mathf.MoveTowards(heatLightController.heatLevel, data.uhi, transitionSpeed * Time.deltaTime);
-            heatLightController.SetHeatLevel(newHeat);
+            if (smoothTransition)
+            {
+                // Smoothly move heatLevel toward the target each frame
+                float newHeat = Mathf.MoveTowards(hlc.heatLevel, data.uhi, transitionSpeed * Time.deltaTime);
+                hlc.SetHeatLevel(newHeat);
+            }
+            else
+            {
+                // Snap instantly
+                hlc.SetHeatLevel(data.uhi);
+            }
         }
-        else
+
+        // send neighbors
+        sceneController.UpdateScenes(data.neighbors);
+
+        // display uhi value
+        UpdateUI(data.uhi);
+        Debug.Log("UHI: " + data.uhi);
+    }
+
+    public void UpdateHeatLightControllers(Scene front, Scene left, Scene right)
+    {
+        heatLightControllers.Clear();
+        AddHeatLightFromScene(front);
+        AddHeatLightFromScene(left);
+        AddHeatLightFromScene(right);
+
+    }
+
+    public void AddHeatLightFromScene(Scene scene)
+    {
+        foreach (GameObject obj in scene.GetRootGameObjects())
         {
-            // Snap instantly
-            heatLightController.SetHeatLevel(data.uhi);
+            HeatLightController hlc = obj.GetComponentInChildren<HeatLightController>();
+            if (hlc != null && !heatLightControllers.Contains(hlc))
+            {
+                heatLightControllers.Add(hlc);
+            }
         }
     }
+
+    private void UpdateUI(float uhi) { 
+        UHI.text = "UHI: " + uhi;
+    }
+
 }

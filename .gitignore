@@ -46,3 +46,4 @@ tmp/
 temp/
 *.pid
 *.npy
+PythonProject2/heatmap.png

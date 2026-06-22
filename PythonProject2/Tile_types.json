@@ -1,0 +1,18 @@
+{
+  "0": "bare_soil",
+  "1": "built_low",
+  "2": "built_high",
+  "3": "trees",
+  "4": "low_veg",
+  "5": "water",
+  "6": "farmland",
+
+  "7": "built_low_char",
+  "8": "built_high_char",
+  "9": "appartment_char",
+  "10": "canals_char",
+  "11": "lakes_char",
+  "12": "parks_char",
+  "13": "forests_char",
+  "14": "farmland_char"
+}

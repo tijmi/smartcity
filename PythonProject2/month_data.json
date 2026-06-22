@@ -1,0 +1,62 @@
+{
+    "1": {
+        "name": "January",
+        "temperature": 18,
+        "death": 400
+    },
+    "2": {
+        "name": "Februari",
+        "temperature": 18,
+        "death": 400
+    },
+    "3": {
+        "name": "March",
+        "temperature": 18,
+        "death": 400
+    },
+    "4": {
+        "name": "April",
+        "temperature": 18,
+        "death": 400
+    },
+    "5": {
+        "name": "May",
+        "temperature": 18,
+        "death": 400
+    },
+    "6": {
+        "name": "June",
+        "temperature": 18,
+        "death": 400
+    },
+    "7": {
+        "name": "July",
+        "temperature": 18,
+        "death": 400
+    },
+    "8": {
+        "name": "August",
+        "temperature": 18,
+        "death": 400
+    },
+    "9": {
+        "name": "September",
+        "temperature": 18,
+        "death": 400
+    },
+    "10": {
+        "name": "October",
+        "temperature": 18,
+        "death": 400
+    },
+    "11": {
+        "name": "November",
+        "temperature": 18,
+        "death": 400
+    },
+    "12": {
+        "name": "December",
+        "temperature": 18,
+        "death": 400
+    }
+}

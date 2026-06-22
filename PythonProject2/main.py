@@ -77,18 +77,18 @@ def main():
             month = state.pop("month_update", None)
 
         if month is not None:
-            print("new month received")
+            print(f"new month received: {month}")
             with open(Path(__file__).parent / "month_data.json", 'r') as jsonfile:
                 month_data = json.load(jsonfile)
                 temperature = month_data[str(month)]["temperature"]
                 death = month_data[str(month)]["death"]
 
         if city_id is not None:
-            print("new city received")
+            print(f"new city received: {city_id}")
             city.update_city(city_id)
 
         if tile_type is not None and tile_id is not None:
-            print("new tile received")
+            print(f"new tile received: {tile_id}, type: {tile_type}")
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None

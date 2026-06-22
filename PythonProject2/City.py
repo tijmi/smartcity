@@ -76,18 +76,18 @@ class City:
 
 # Always comment this code:
 
-city = City()
-with open('PythonProject2/city_import_test.json', 'r') as jsonfile:
-    data = json.load(jsonfile)
+# city = City()
+# with open('PythonProject2/city_import_test.json', 'r') as jsonfile:
+#     data = json.load(jsonfile)
 
-# data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
-# data["4"]["city_data"] = city.convert_Niels_array(data["4"]["city_data"]).tolist()
+# # data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
+# # data["4"]["city_data"] = city.convert_Niels_array(data["4"]["city_data"]).tolist()
 
-# data["4"]["city_data"] = np.rot90(data["4"]["city_data"]).tolist()
+# # data["4"]["city_data"] = np.rot90(data["4"]["city_data"]).tolist()
 
-# Import data initially
-data["0"]["city_data"] = np.load('PythonProject2/grid_data_Eindhoven.npy', allow_pickle=True).tolist()
+# # Import data initially
+# data["0"]["city_data"] = np.load('PythonProject2/grid_data_Eindhoven.npy', allow_pickle=True).tolist()
 
-with open('PythonProject2/city_import_test.json', 'w') as jsonfile:
-    json.dump(data, jsonfile, indent=2)
+# with open('PythonProject2/city_import_test.json', 'w') as jsonfile:
+#     json.dump(data, jsonfile, indent=2)
 

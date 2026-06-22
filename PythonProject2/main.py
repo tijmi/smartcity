@@ -8,8 +8,11 @@ import threading
 import requests
 from pathlib import Path
 import random
+import json
+import socket
 
 url_output = "http://192.168.1.3:5000/output"
+url_input = "http://192.168.1.1:5000/input"
 allow_fake_input = False
 
 app = Flask(__name__)
@@ -23,9 +26,15 @@ state = {
 }
 state_lock = threading.Lock()
 
+UDP_IP = "127.0.0.1"
+UDP_PORT = 5005
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 # Receive data
 @app.route('/input', methods=['GET', 'POST'])
 def receive_data():
+
     data = request.get_json()
     if not isinstance(data, dict):
         return jsonify({"status": "error", "message": "Expected JSON object"}), 400
@@ -164,6 +173,10 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         }
     }
 
+def send_state(state: dict):
+    msg = json.dumps(state).encode()
+    sock.sendto(msg, (UDP_IP, UDP_PORT))
+
 def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
     # Get UHI and wind data at player location
     wind_data = city.city_data[player_pos[0]][player_pos[1]]["ws_100m_alt"]
@@ -191,8 +204,13 @@ def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
 
 def send_output(output):
     try:
-        resp = requests.post(url_output, json=output, timeout=1)
+        resp = requests.post(url_input, json=output, timeout=1)
     except Exception as e:
+        print(f"error {e}")
+    try:
+        send_state(output)
+    except Exception as e:
+        print("unity error")
         print(f"error {e}")
 
 def detect_fake_input():

@@ -9,9 +9,7 @@ import requests
 from pathlib import Path
 import random
 
-url_uhi = "http://192.168.1.3:5000/output/uhi"
-url_wind = "http://192.168.1.3:5000/output/wind"
-url_death = "http://192.168.1.3:5000/output/death"
+url_output = "http://192.168.1.3:5000/output"
 allow_fake_input = True
 
 app = Flask(__name__)
@@ -92,7 +90,8 @@ def main():
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
-                send_wind_uhi_death(0, 0, 0)
+                build_player_output(player_id, tile_manager, city, temperature, death)
+                send_output(output)
 
                 print("Output: 0, 0, 0")
 
@@ -109,13 +108,12 @@ def main():
             # Only output if we know where the player is
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
-                send_wind_uhi_death(output["wind"], output["uhi"], output["death"])
+                send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
-                # SEND TO UNITY AS WELL
             else:
-                output = build_player_output(0, tile_manager, city, temperature, death)
-                send_wind_uhi_death(output["wind"], output["uhi"], output["death"])
+                output = build_player_output(player_id, tile_manager, city, temperature, death)
+                send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
@@ -127,6 +125,19 @@ def update_everything(tile_manager, city, temperature, calculator, heatmap):
 
 # Collect all player output data and return
 def build_player_output(player_id, tile_manager, city, temperature, death):
+    if player_id is None:
+        return {
+            "uhi": 0,
+            "wind": 0,
+            "land_use": 0,
+            "death": 0,
+            "neighbors": {
+                "front": None,
+                "left": None,
+                "right": None
+            }
+        }
+    
     x = int(player_id % grid_size[0])
     y = int(player_id // grid_size[1])
 
@@ -178,11 +189,9 @@ def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
 
     return average_wind, average_UHI, death_to_UHI
 
-def send_wind_uhi_death(wind, uhi, death):
+def send_output(output):
     try:
-        resp = requests.post(url_uhi, json= uhi, timeout=1)
-        resp = requests.post(url_wind, json= wind, timeout=1)
-        resp = requests.post(url_death, json= death, timeout=1)
+        resp = requests.post(url_output, json=output, timeout=1)
     except Exception as e:
         print(f"error {e}")
 

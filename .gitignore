@@ -44,7 +44,7 @@ coverage/
 [Bb]uilds/
 [Ll]ogs/
 [Mm]emoryCaptures/
-UserSettings/
+**/UserSettings/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
@@ -56,3 +56,7 @@ sysinfo.txt
 crashlytics-build.properties
 Assets/AssetStoreTools*
 *.apiupaterconfigs
+**/.vs/
+*.csproj
+*.sln
+*.vsconfig

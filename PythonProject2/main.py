@@ -13,7 +13,7 @@ import random
 url_uhi = "http://192.168.1.3:5000/output/uhi"
 url_wind = "http://192.168.1.3:5000/output/wind"
 url_death = "http://192.168.1.3:5000/output/death"
-allow_fake_input = True
+# allow_fake_input = True
 
 app = Flask(__name__)
 
@@ -68,7 +68,7 @@ def main():
 
     while True:
 
-        if allow_fake_input: detect_fake_input() # Check for manual fake input
+        # if allow_fake_input: detect_fake_input() # Check for manual fake input
 
         # Grab and clear any pending updates
         with state_lock:
@@ -93,9 +93,7 @@ def main():
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
-                send_wind_uhi_death(url_wind, 0)
-                send_wind_uhi_death(url_uhi, 0)
-                send_wind_uhi_death(url_death, 0)
+                send_wind_uhi_death(0, 0, 0)
 
                 print("Output: 0, 0, 0")
 
@@ -188,21 +186,21 @@ def send_wind_uhi_death(wind, uhi, death):
     except Exception as e:
         print(f"error {e}")
 
-def detect_fake_input():
-    if keyboard.is_pressed('t'):
-        with state_lock:
-            state["tile_type"] = random.randint(0, 6) # Random tile type
-            state["tile_id"] = random.randint(0, 47) # Random location
-    if keyboard.is_pressed('c'):
-        with state_lock:
-            state["city_update"] = random.randint(0, 9) # Random city
-    if keyboard.is_pressed('m'):
-        with state_lock:
-            state["month_update"] = random.randint(1, 12) # Random month
-    if keyboard.is_pressed('p'):
-        with state_lock:
-            state["tile_type"] = random.randint(7, 14) # Random character tile
-            state["tile_id"] = random.randint(0, 47) # Random location
+# def detect_fake_input():
+#     if keyboard.is_pressed('t'):
+#         with state_lock:
+#             state["tile_type"] = random.randint(0, 6) # Random tile type
+#             state["tile_id"] = random.randint(0, 47) # Random location
+#     if keyboard.is_pressed('c'):
+#         with state_lock:
+#             state["city_update"] = random.randint(0, 9) # Random city
+#     if keyboard.is_pressed('m'):
+#         with state_lock:
+#             state["month_update"] = random.randint(1, 12) # Random month
+#     if keyboard.is_pressed('p'):
+#         with state_lock:
+#             state["tile_type"] = random.randint(7, 14) # Random character tile
+#             state["tile_id"] = random.randint(0, 47) # Random location
 
 if __name__ == '__main__':
     flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000, debug=False), daemon=True)

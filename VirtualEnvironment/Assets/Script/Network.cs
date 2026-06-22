@@ -1,34 +1,64 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using UnityEngine.SceneManagement;
 
-public class Network : MonoBehaviour
-{
-    private void Start()
-    {
-        StartCoroutine(unityWebReqeustPost());
+public class CityReceiver : MonoBehaviour {
+    UdpClient udp;
+    Thread thread;
+    string latestJson = null;
+    readonly object lockObj = new object();
+    string[] scenes = { "Agriculture", "Apartment", "Canal", "City", "Forest", "Lake", "Park", "Suburb", "Test" };
+
+    void Start() {
+        udp = new UdpClient(5005);
+        thread = new Thread(() => {
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+            while (true) {
+                byte[] data = udp.Receive(ref ep);
+                print($"Received {data.Length} bytes from {ep.Address}:{ep.Port}");
+                print($"Data: {Encoding.UTF8.GetString(data)}");
+                string json = Encoding.UTF8.GetString(data);
+                lock (lockObj) { latestJson = json; }
+            }
+        });
+        thread.IsBackground = true;
+        thread.Start();
     }
-    IEnumerator unityWebReqeustPost()
-    {
-        string hardware_url = "http://192.168.1.1:5000/input";
-        string software_url = "http://192.168.1.3:5000/output/uhi";
-        WWWForm form = new WWWForm();
-        form.AddField("myField", "myData");
 
-        UnityWebRequest www = UnityWebRequest.Post(software_url, form);
-
-        // wait response
-        yield return www.SendWebRequest();
-
-
-
-        if(www.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.downloadHandler.text);
+    void Update() {
+        string json;
+        lock (lockObj) {
+            json = latestJson;
+            latestJson = null;
         }
-        else
-        {
-            Debug.Log("ERROR: " + www.error);
+        if (json != null) {
+            var state = JsonUtility.FromJson<land_use>(json);
+            ApplyLanduse(state);
         }
     }
+
+    void ApplyLanduse(land_use state) {
+        SceneManager.LoadScene("Canal");
+        if("char" in land_use) {
+            // Apply land use changes to the scene based on the received state
+            // This is a placeholder for actual implementation
+            Debug.Log("Applying land use changes...");
+        }
+        
+        
+    }
+
+    void OnApplicationQuit() {
+        thread.Abort();
+        udp.Close();
+    }
+}
+
+[System.Serializable]
+public class CityState {
+    public int tick;
+    public int[] grid;
 }

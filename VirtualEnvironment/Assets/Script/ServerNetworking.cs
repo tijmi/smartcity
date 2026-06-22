@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,6 +13,7 @@ public class PlayerData
     public float uhi;
     public float wind;
     public string land_use;
+    public float death;
     public Neighbor neighbors;
 }
 [Serializable]
@@ -24,79 +28,76 @@ public class ServerNetworking : MonoBehaviour
 {
     private string result = "";
     private PlayerData lastData = null;
+    UdpClient udp;
+    Thread thread;
+    string latestJson = null;
+    readonly object lockObj = new object();
 
     [SerializeField]
     private string url = "http://192.168.1.1:5000/input";
-        void Start()
+
+    [SerializeField]
+    public HeatLightController heatLightController;
+
+    [Tooltip("If true, smoothly transitions to the target value instead of snapping instantly")]
+    public bool smoothTransition = true;
+    public float transitionSpeed = 3f;
+
+    void Start()
     {
-        StartCoroutine(RequestLoop());
+        udp = new UdpClient(5005);
+        thread = new Thread(() => {
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+            while (true)
+            {
+                byte[] data = udp.Receive(ref ep);
+                print($"Received {data.Length} bytes from {ep.Address}:{ep.Port}");
+                print($"Data: {Encoding.UTF8.GetString(data)}");
+                string json = Encoding.UTF8.GetString(data);
+                lock (lockObj) { latestJson = json; }
+            }
+        });
+        thread.IsBackground = true;
+        thread.Start();
     }
 
-    IEnumerator RequestLoop()
+    void Update()
     {
-        while (true)
+        string json;
+        lock (lockObj)
         {
-            yield return StartCoroutine(RequestGet());
-            yield return new WaitForSeconds(0.5f);
+            json = latestJson;
+            latestJson = null;
+        }
+        if (json != null)
+        {
+            PlayerData playerData = JsonUtility.FromJson<PlayerData>(json);
+            lastData = playerData;
+            ShareData(playerData);
         }
     }
 
-    IEnumerator RequestPost()
+
+    void ShareData(PlayerData data)
     {
-        byte[] bodyRaw = Encoding.UTF8.GetBytes("{}");
-
-        using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+        if (data == null)
         {
-            Debug.Log(www);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            Debug.Log(www.uploadHandler);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            Debug.Log(www.downloadHandler);
-            www.SetRequestHeader("Content-Type", "application/json");
-            www.timeout = 3;
+            Debug.LogError("There is no playerData");
+            return;
+        }
 
-            yield return www.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                Debug.Log(www.downloadHandler.text);
-                result = www.downloadHandler.text;
-
-                //PlayerData newData = JsonUtility.FromJson<PlayerData>(result);
-                //lastData = newData;
-            }
+        // send uhi to HeatLightController
+        if (smoothTransition)
+        {
+            // Smoothly move heatLevel toward the target each frame
+            float newHeat = Mathf.MoveTowards(heatLightController.heatLevel, data.uhi, transitionSpeed * Time.deltaTime);
+            heatLightController.SetHeatLevel(newHeat);
+        }
+        else
+        {
+            // Snap instantly
+            heatLightController.SetHeatLevel(data.uhi);
         }
     }
-
-    IEnumerator RequestGet()
-    {
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
-        {
-            www.timeout = 3;
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                Debug.Log(www.downloadHandler.text);
-                result = www.downloadHandler.text;
-            }
-            }
-    }
-
-    //void SplitData(string result)
-    //{
-    //    PlayerData playerData = JsonUtility.FromJson<PlayerData>(result);
-
-    //    if (playerData == null) {
-    //        Debug.LogError("There is no playerData");
-    //    }
-    //}
 }

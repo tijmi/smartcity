@@ -128,7 +128,7 @@ def main():
 def update_everything(tile_manager, city, temperature, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
-    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0], temperature)
+    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     heatmap.update_heatmap(all_subtiles)
 
 

@@ -10,13 +10,12 @@ TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
 class Calculator:
     def __init__(self):
         self.city = 0
-        self.base_temperature = 17 # HAS TO CONTAIN BASE TEMPERATURE CALCULATED
         self.subtiles = np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[0], int(math.sqrt(subtile_amount)) * grid_size[1]), dtype=object) # temporary empty list
 
         with open(TILE_TYPES_PATH, 'r') as jsonfile:
             self.data = json.load(jsonfile)
 
-    def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing, temperature):
+    def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
         print("updating calculations")
         self.city = city
         self.subtiles = subtiles
@@ -24,10 +23,10 @@ class Calculator:
             for y in range(grid_size[1] * int(math.sqrt(subtile_amount))):
                 # For subtile at (X, Y):
                 current_subtile = self.subtiles[x, y]
-                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing, temperature)
+                UHI = self.calc_act_UHI(x, y, tile_population, tile_soil_sealing)
                 current_subtile.UHI = UHI
 
-    def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing, temperature):
+    def calc_act_UHI(self, x, y, tile_population, tile_soil_sealing):
         max_UHI = -1.605 + (1.062 * math.log10(self.city.city_data[x][y]["pop_10km"] + tile_population)) - (0.356 * self.calc_wind10m(x, y))
         if max_UHI < 0: max_UHI = 0
 
@@ -35,11 +34,6 @@ class Calculator:
 
         type_reduction = self.calc_type_reduction(x, y)
         act_UHI = pot_UHI * (1-type_reduction)
-
-        d_temperature = temperature - self.base_temperature # Get delta temp
-        if d_temperature < 0: d_temperature = 0 # Not negative
-
-        act_UHI += 0.079 * temperature * ((self.city.city_data[x][y]["ss_1km"] + tile_soil_sealing) / 100) # Add effect of temperature
 
         return act_UHI
 

@@ -187,17 +187,17 @@ def send_wind_uhi_death(wind, uhi, death):
         print(f"error {e}")
 
 def detect_fake_input():
-    if random.randint(0, 300) == 1:
+    if random.randint(0, 1000000) == 1:
         with state_lock:
             state["tile_type"] = random.randint(0, 6) # Random tile type
             state["tile_id"] = random.randint(0, 47) # Random location
-    if random.randint(0, 300) == 1:
+    if random.randint(0, 1000000) == 1:
         with state_lock:
-            state["city_update"] = random.randint(0, 9) # Random city
-    if random.randint(0, 300) == 1:
+            state["city_update"] = random.randint(0, 4) # Random city
+    if random.randint(0, 1000000) == 1:
         with state_lock:
             state["month_update"] = random.randint(1, 12) # Random month
-    if random.randint(0, 800) == 1:
+    if random.randint(0, 2000000) == 1:
         with state_lock:
             state["tile_type"] = random.randint(7, 14) # Random character tile
             state["tile_id"] = random.randint(0, 47) # Random location

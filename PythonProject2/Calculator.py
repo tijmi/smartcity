@@ -41,7 +41,6 @@ class Calculator:
 
         act_UHI += 0.079 * temperature * ((self.city.city_data[x][y]["ss_1km"] + tile_soil_sealing) / 100) # Add effect of temperature
 
-        print(act_UHI)
         return act_UHI
 
 

@@ -1,9 +1,6 @@
 {
   "0": {
     "name": "Eindhoven",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -3199,9 +3196,6 @@
   },
   "1": {
     "name": "Groningen",
-    "population": 800000,
-    "soilsealing": 100,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_low",
@@ -6397,9 +6391,6 @@
   },
   "2": {
     "name": "Kootwijk",
-    "population": 300000,
-    "soilsealing": 80,
-    "wind": 7,
     "fake_tiles": [
       [
         "trees",
@@ -9595,9 +9586,6 @@
   },
   "3": {
     "name": "Middelburg",
-    "population": 10,
-    "soilsealing": 30,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -12793,9 +12781,6 @@
   },
   "4": {
     "name": "Scheveningen",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_low",
@@ -15991,9 +15976,6 @@
   },
   "5": {
     "name": "Veluwe",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -16560,9 +16542,6 @@
   },
   "6": {
     "name": "Veluwe",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -17129,9 +17108,6 @@
   },
   "7": {
     "name": "Veluwe",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -17698,9 +17674,6 @@
   },
   "8": {
     "name": "Veluwe",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",
@@ -18267,9 +18240,6 @@
   },
   "9": {
     "name": "Veluwe",
-    "population": 200000,
-    "soilsealing": 45,
-    "wind": 7,
     "fake_tiles": [
       [
         "built_high",

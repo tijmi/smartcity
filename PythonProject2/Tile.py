@@ -10,12 +10,12 @@ TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
 
 class Tile:
 
-    def __init__(self, grid_pos, type):
+    def __init__(self, grid_pos, type_id):
         self.grid_pos = grid_pos
         with open(TILE_TYPES_PATH, 'r') as jsonfile:
             data = json.load(jsonfile)
 
-            self.type = data[str(type)]
+            self.type = data[str(type_id)]
 
         self.population = 0
         self.soil_sealing = 0

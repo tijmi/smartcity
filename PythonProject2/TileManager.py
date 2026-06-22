@@ -14,14 +14,14 @@ class TileManager:
                 self.tiles[i, j] = Tile((i, j), random.randint(0, 6)) # Place random tile in each position
 
 
-    def update_tile(self, position, type):
+    def update_tile(self, position, type_id):
 
         x = math.floor(position % grid_size[0])
         y = math.floor(position // grid_size[0])
 
         print(f"tile_location: {x}, {y}")
 
-        self.tiles[x, y] = Tile((x, y), type) # Place new tile
+        self.tiles[x, y] = Tile((x, y), type_id) # Place new tile
 
     def get_subtiles(self):
         # Make empty subtiles array

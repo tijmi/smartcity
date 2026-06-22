@@ -13,14 +13,14 @@ import socket
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
-allow_fake_input = False
+allow_fake_input = True
 
 app = Flask(__name__)
 
 # Shared state between Flask routes and main loop
 state = {
     "tile_id": None,
-    "tile_type": None,
+    "tile_type_id": None,
     "city_update": 0, # start in Eindhoven
     "month_update": 1 # start in January
 }
@@ -41,11 +41,11 @@ def receive_data():
 
     print(data)
 
-    if 'tile_id' in data and 'tile_type' in data:
+    if 'tile_id' in data and 'tile_type_id' in data:
         tile_id = data.get('tile_id')
-        tile_type = data.get('tile_type')
+        tile_type = data.get('tile_type_id')
         with state_lock:
-            state["tile_type"] = tile_type
+            state["tile_type_id"] = tile_type
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
 
@@ -79,7 +79,7 @@ def main():
         # Grab and clear any pending updates
         with state_lock:
             tile_id = state.pop("tile_id", None)
-            tile_type = state.pop("tile_type", None)
+            tile_type_id = state.pop("tile_type_id", None)
             city_id = state.pop("city_update", None)
             month = state.pop("month_update", None)
 
@@ -94,8 +94,8 @@ def main():
             print(f"new city received: {city_id}")
             city.update_city(city_id)
 
-        if tile_type is not None and tile_id is not None:
-            print(f"new tile received: {tile_id}, type: {tile_type}")
+        if tile_type_id is not None and tile_id is not None:
+            print(f"new tile received: {tile_id}, type: {tile_type_id}")
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
@@ -104,23 +104,18 @@ def main():
 
                 print("Output: 0, 0, 0")
 
-            if tile_type <= 6:  # if not a character
-                tile_manager.update_tile(tile_id, tile_type)
+            if tile_type_id <= 6:  # if not a character
+                tile_manager.update_tile(tile_id, tile_type_id)
             else:  # if character
-                tile_manager.update_tile(tile_id, tile_type)
+                tile_manager.update_tile(tile_id, tile_type_id)
                 player_id = tile_id # Update player position
 
         # Update Calculations, Heatmap and Player data if update was received
-        if tile_type is not None or tile_id is not None or month is not None or city_id is not None:
-            update_everything(tile_manager, city, temperature, calculator, heatmap) # Update calculations and heatmap
+        if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
+            update_everything(tile_manager, city, calculator, heatmap) # Update calculations and heatmap
 
             # Only output if we know where the player is
             if player_id is not None:
-                output = build_player_output(player_id, tile_manager, city, temperature, death)
-                send_output(output)
-                print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
-
-            else:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")

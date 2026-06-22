@@ -16,13 +16,13 @@ void loop() {
     if (message.startsWith("WIND")) {
       String speedStr = message.substring(12);
       int speed = speedStr.toInt();
-      int mappedspeed = int(map(speed, 0, 100, 0, 255));
-      if (speed >= 0 && speed <= 255) {
+      int mappedspeed = int(map(speed, 0, 8, 0, 255));
+      if (speed >= 0 && speed <= 8) {
         analogWrite(Fan_Pin, mappedspeed);
         char buf[64];
         snprintf(buf, sizeof(buf), "success: %d", mappedspeed);
         Serial.println(buf);
-    }
+      }
     }
   }
 }

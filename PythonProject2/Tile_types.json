@@ -14,5 +14,7 @@
   "11": "lakes_char",
   "12": "parks_char",
   "13": "forests_char",
-  "14": "farmland_char"
+  "14": "farmland_char",
+
+  "15": "sea"
 }

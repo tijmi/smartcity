@@ -60,6 +60,7 @@ class Calculator:
             "trees": 0,
             "low_veg": 0,
             "water": 0,
+            "sea": 0,
             "farmland": 0,
             "bare_soil": 0,
             "built_low_char": 0,

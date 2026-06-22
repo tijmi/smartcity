@@ -10,7 +10,7 @@ from pathlib import Path
 import random
 
 url_output = "http://192.168.1.3:5000/output"
-allow_fake_input = True
+allow_fake_input = False
 
 app = Flask(__name__)
 
@@ -24,7 +24,7 @@ state = {
 state_lock = threading.Lock()
 
 # Receive data
-@app.route('/input', methods=['POST'])
+@app.route('/input', methods=['GET', 'POST'])
 def receive_data():
     data = request.get_json()
     if not isinstance(data, dict):

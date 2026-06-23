@@ -59,7 +59,7 @@ class Calculator:
             "bare_soil": 0,
             "built_low_char": 0,
             "built_high_char": 0,
-            "appartment_char": 0,
+            "apartment_char": 0,
             "canals_char": 0,
             "lakes_char": 0,
             "parks_char": 0,

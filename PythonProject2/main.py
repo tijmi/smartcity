@@ -1,3 +1,5 @@
+import pygame
+
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
@@ -10,6 +12,7 @@ from pathlib import Path
 import random
 import json
 import socket
+import viewheatmap
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
@@ -63,16 +66,18 @@ def receive_data():
 
     return jsonify({"status": "error", "message": "Unknown payload shape"}), 400
 
+
 def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
     heatmap = Heatmap_Creator()
     player_id = None
-
+    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
+    clock = pygame.time.Clock()
     temperature = 0
 
-    while True:
+    while game.running:
 
         if allow_fake_input: detect_fake_input() # Check for manual fake input
 
@@ -119,6 +124,17 @@ def main():
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
+
+            else:
+                output = build_player_output(player_id, tile_manager, city, temperature, death)
+                send_output(output)
+                print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
+        
+        #update the heatmap display
+        clock.tick(60)
+        game.clear()
+        game.update()
+
 
 def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap

@@ -73,7 +73,7 @@ def main():
     city = City()
     heatmap = Heatmap_Creator()
     player_id = None
-    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=0)
+    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
     clock = pygame.time.Clock()
     temperature = 0
     death = 0

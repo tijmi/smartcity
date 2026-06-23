@@ -36,7 +36,7 @@ type_roughness = {
     "sea": 0.005
 }
 
-grid_size = (6, 8)
+grid_size = (8, 6)
 
 types = ("built_low", "built_high", "trees", "low_veg", "water", "sea", "farmland", "bare_soil", "built_low_char", "built_high_char", "apartment_char", "canals_char", "lakes_char", "parks_char", "forests_char", "farmland_char") # string list
 

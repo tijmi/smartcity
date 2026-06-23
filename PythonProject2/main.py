@@ -215,7 +215,7 @@ def detect_fake_input():
             state["tile_id"] = random.randint(0, 47) # Random location
     if random.randint(0, 1000000) == 1:
         with state_lock:
-            state["city_update"] = random.randint(0, 4) # Random city
+            state["city_update"] = random.randint(0, 9) # Random city
     if random.randint(0, 1000000) == 1:
         with state_lock:
             state["month_update"] = random.randint(1, 12) # Random month

@@ -8,8 +8,6 @@ class GameDisplay:
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN, display=display_index)
-        self.width = width
-        self.height = height
         self.heatmapPath = heatmapPath
         self.running = True
 

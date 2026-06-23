@@ -24,7 +24,9 @@ class Heatmap_Creator:
                 uhi_grid[x,y] = subtiles[x,y].UHI
 
         # clear previous frame and redraw heatmap
-        plt.clf()
+        plt.cla()
+        plt.gcf().set_facecolor('black')
+        plt.gca().set_facecolor('black')
         plt.imshow(
             uhi_grid,
             cmap = "RdYlGn_r", # Green(Low) to Red(High)
@@ -34,5 +36,4 @@ class Heatmap_Creator:
         plt.axis("off")
         plt.tight_layout()
         plt.draw()
-        plt.pause(0.01)
         plt.savefig(Path(__file__).parent / "heatmap.png")

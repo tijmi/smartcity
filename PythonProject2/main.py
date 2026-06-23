@@ -16,7 +16,7 @@ import viewheatmap
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
-allow_fake_input = True
+allow_fake_input = False
 
 app = Flask(__name__)
 
@@ -73,7 +73,7 @@ def main():
     city = City()
     heatmap = Heatmap_Creator()
     player_id = None
-    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
+    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=0)
     clock = pygame.time.Clock()
     temperature = 0
 

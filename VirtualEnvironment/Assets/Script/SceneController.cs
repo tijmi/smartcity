@@ -59,7 +59,7 @@ public class SceneController : MonoBehaviour
             obj.SetActive(active);
 
             // control with audio listner
-            AudioListener al = obj.GetComponent<AudioListener>();
+            AudioListener al = obj.GetComponentInChildren<AudioListener>();
             // LATER NEED TO CHANGE TO ACTIVE
             if(al != null) al.enabled = false;
         }
@@ -91,15 +91,15 @@ public class SceneController : MonoBehaviour
     {
         switch (tile)
         {
-            case "trees": return "forest";
-            case "water": return "lake";
-            case "built_low": return "suburb";
-            case "built_high": return "city";
-            case "farmland": return "agriculture";
-            case "low_veg": return "park";
-            case "shrubs": return "park";
-            case "bare_soil": return "suburb";
-            default: return "forest";
+            case "trees": return "Forest";
+            case "water": return "Lake";
+            case "built_low": return "Suburb";
+            case "built_high": return "City";
+            case "farmland": return "Agriculture";
+            case "low_veg": return "Park";
+            case "shrubs": return "Park";
+            case "bare_soil": return "Suburb";
+            default: return "Forest";
         }
     }
 

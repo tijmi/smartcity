@@ -39,7 +39,7 @@ public class ServerNetworking : MonoBehaviour
     readonly object lockObj = new object();
 
     [SerializeField]
-    private string url = "http://145.126.57.1:5000/input";
+    private string url = "http://192.168.1.1:5000/input";
 
     [SerializeField] public List<HeatLightController> heatLightControllers = new List<HeatLightController>();
     [SerializeField] public SceneController sceneController;
@@ -90,6 +90,19 @@ public class ServerNetworking : MonoBehaviour
             ShareData(testData);
         }
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            string testJson = "{\"uhi\":0,\"wind\":3.0,\"land_use\":\"bare_soil\",\"death\":10,\"neighbors\":{\"front\":\"bare_soil\",\"left\":\"farmland\",\"right\":\"low_veg\"}}";
+            PlayerData testData = JsonUtility.FromJson<PlayerData>(testJson);
+            ShareData(testData);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            string testJson = "{\"uhi\":0,\"wind\":3.0,\"land_use\":\"bare_soil\",\"death\":10,\"neighbors\":{\"front\":\"bare_soil\",\"left\":\"bare_soil\",\"right\":\"low_veg\"}}";
+            PlayerData testData = JsonUtility.FromJson<PlayerData>(testJson);
+            ShareData(testData);
+        }
+
         string json;
         lock (lockObj)
         {
@@ -99,7 +112,10 @@ public class ServerNetworking : MonoBehaviour
         if (json != null)
         {
             PlayerData playerData = JsonUtility.FromJson<PlayerData>(json);
-            if(lastData == playerData)
+            if(lastData != null &&
+                lastData.uhi == playerData.uhi&&
+                lastData.land_use == playerData.land_use&&
+                lastData.neighbors?.front == playerData.neighbors?.front)
             {
                 return;
             }

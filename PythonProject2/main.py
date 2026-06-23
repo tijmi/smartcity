@@ -184,7 +184,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         "land_use": tile.type,
         "death": death_to_UHI,
         "city": city.name,
-        "population": int(population / 5),
+        "population": int(population / 45),
         "neighbors":{
             "front": get_neighbor_type(x-1, y),
             "left": get_neighbor_type(x, y-1),

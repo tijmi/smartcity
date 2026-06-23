@@ -16,14 +16,14 @@ import viewheatmap
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
-allow_fake_input = False
+allow_fake_input = True
 
 app = Flask(__name__)
 
 # Shared state between Flask routes and main loop
 state = {
     "tile_id": None,
-    "tile_type": None,
+    "tile_type_id": None,
     "city_update": 0, # start in Eindhoven
     "month_update": 1 # start in January
 }
@@ -44,11 +44,11 @@ def receive_data():
 
     print(data)
 
-    if 'tile_id' in data and 'tile_type' in data:
+    if 'tile_id' in data and 'tile_type_id' in data:
         tile_id = data.get('tile_id')
-        tile_type = data.get('tile_type')
+        tile_type = data.get('tile_type_id')
         with state_lock:
-            state["tile_type"] = tile_type
+            state["tile_type_id"] = tile_type
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
 
@@ -84,7 +84,7 @@ def main():
         # Grab and clear any pending updates
         with state_lock:
             tile_id = state.pop("tile_id", None)
-            tile_type = state.pop("tile_type", None)
+            tile_type_id = state.pop("tile_type_id", None)
             city_id = state.pop("city_update", None)
             month = state.pop("month_update", None)
 
@@ -99,8 +99,8 @@ def main():
             print(f"new city received: {city_id}")
             city.update_city(city_id)
 
-        if tile_type is not None and tile_id is not None:
-            print(f"new tile received: {tile_id}, type: {tile_type}")
+        if tile_type_id is not None and tile_id is not None:
+            print(f"new tile received: {tile_id}, type: {tile_type_id}")
 
             if tile_id == player_id:  # If player got replaced
                 player_id = None
@@ -109,14 +109,14 @@ def main():
 
                 print("Output: 0, 0, 0")
 
-            if tile_type <= 6:  # if not a character
-                tile_manager.update_tile(tile_id, tile_type)
+            if tile_type_id <= 6:  # if not a character
+                tile_manager.update_tile(tile_id, tile_type_id)
             else:  # if character
-                tile_manager.update_tile(tile_id, tile_type)
+                tile_manager.update_tile(tile_id, tile_type_id)
                 player_id = tile_id # Update player position
 
         # Update Calculations, Heatmap and Player data if update was received
-        if tile_type is not None or tile_id is not None or month is not None or city_id is not None:
+        if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
             update_everything(tile_manager, city, calculator, heatmap) # Update calculations and heatmap
 
             # Only output if we know where the player is
@@ -151,6 +151,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             "wind": 0,
             "land_use": 0,
             "death": 0,
+            "city": None,
             "neighbors": {
                 "front": None,
                 "left": None,
@@ -169,7 +170,12 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
     def get_neighbor_type(nx, ny):
         if 0 <= nx < grid_size[0] and 0 <= ny < grid_size[1]:
             return tile_manager.tiles[nx, ny].type
-        return None
+        else:
+            return city.fake_tiles[nx + 1, ny + 1]
+
+    # Population of straight neighbours
+    population = tile.population + tile_manager.tiles[x + 1, y].population + tile_manager.tiles[x - 1, y].population + tile_manager.tiles[x, y + 1].population + tile_manager.tiles[x, y - 1].population
+
 
     # neighbors: for connect with scene in Unity
     return{
@@ -177,6 +183,8 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         "wind": wind,
         "land_use": tile.type,
         "death": death_to_UHI,
+        "city": city.name,
+        "population": int(population / 5),
         "neighbors":{
             "front": get_neighbor_type(x-1, y),
             "left": get_neighbor_type(x, y-1),
@@ -231,7 +239,7 @@ def detect_fake_input():
             state["tile_id"] = random.randint(0, 47) # Random location
     if random.randint(0, 1000000) == 1:
         with state_lock:
-            state["city_update"] = random.randint(0, 4) # Random city
+            state["city_update"] = random.randint(0, 9) # Random city
     if random.randint(0, 1000000) == 1:
         with state_lock:
             state["month_update"] = random.randint(1, 12) # Random month

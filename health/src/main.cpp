@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Fast>
 
 #define heartPin 4
 #define LEDPin 3

@@ -135,6 +135,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             "wind": 0,
             "land_use": 0,
             "death": 0,
+            "city": None,
             "neighbors": {
                 "front": None,
                 "left": None,
@@ -153,7 +154,12 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
     def get_neighbor_type(nx, ny):
         if 0 <= nx < grid_size[0] and 0 <= ny < grid_size[1]:
             return tile_manager.tiles[nx, ny].type
-        return None
+        else:
+            return city.fake_tiles[nx + 1, ny + 1]
+
+    # Population of straight neighbours
+    population = tile.population + tile_manager.tiles[x + 1, y].population + tile_manager.tiles[x - 1, y].population + tile_manager.tiles[x, y + 1].population + tile_manager.tiles[x, y - 1].population
+
 
     # neighbors: for connect with scene in Unity
     return{
@@ -161,6 +167,8 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         "wind": wind,
         "land_use": tile.type,
         "death": death_to_UHI,
+        "city": city.name,
+        "population": int(population / 5),
         "neighbors":{
             "front": get_neighbor_type(x-1, y),
             "left": get_neighbor_type(x, y-1),

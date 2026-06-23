@@ -11,6 +11,7 @@ class City:
     def __init__(self):
         self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
         self.city_data =  np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[1] + 2, int(math.sqrt(subtile_amount)) * grid_size[0] + 2), dtype=dict)
+        self.name = "Eindhoven"
 
     # use this when user choose city
     # receive from hardware
@@ -20,6 +21,7 @@ class City:
 
             self.fake_tiles = np.array(data[str(city_id)]['fake_tiles'], dtype=object)
             self.city_data = data[str(city_id)]['city_data']
+            self.name = data[str(city_id)]['name']
 
     def convert_Niels_array(self, arr):
         # Increase array size
@@ -43,36 +45,6 @@ class City:
         arr[:, -1] = right_values   # 8 values
 
         return arr
-
-    # One time working function for importing actual data to JSON file
-    def save_to_json(self, csv_path):
-        cities = ["DenHaag", "Middelburg", "Eindhoven", "Groningen", "Veluwe"]
-        city_json = {}
-
-        # csv_path/wind need to change based on actual data
-        with open(csv_path, 'r') as csvfile:
-            reader = csv.DictReader(csvfile)
-
-            for row in reader:
-                city_name = row['city']
-
-                if city_name not in cities:
-                    print(f"{city_name} is not in cities list, check list first")
-                    continue
-
-                city_json[city_name] = {
-                    'population': int(row['population']),
-                    'soil': float(row['soil']),
-                    'wind': float(row['wind']),
-                    'UA': float(row['UA']),
-                }
-
-
-
-        with open('city_import_test.json', 'w') as f:
-            json.dump(city_json, f, indent=2)
-
-        print(f"Saved: {list(city_json.keys())}")
 
 # Always comment this code:
 

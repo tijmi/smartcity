@@ -26,7 +26,7 @@ class City:
         arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=0)
         arr = np.repeat(arr, int(math.sqrt(subtile_amount)), axis=1)
 
-        # arr = arr[2:-2, 2:-2] # Shave off the extra borders
+        arr = arr[2:-2, 2:-2] # Shave off the extra borders
 
         return arr
     
@@ -81,12 +81,12 @@ class City:
 #     data = json.load(jsonfile)
 #
 # # Import data initially
-# data["5"]["city_data"] = np.load('grid_data_Amsterdam.npy', allow_pickle=True).tolist()
+# # data["5"]["city_data"] = np.load('grid_data_Amsterdam.npy', allow_pickle=True).tolist()
 #
-# # data["4"]["fake_tiles"] = city.fill_fake_tiles().tolist()
-# data["5"]["city_data"] = city.convert_Niels_array(data["5"]["city_data"]).tolist()
-#
-# data["5"]["city_data"] = np.rot90(data["5"]["city_data"]).tolist()
+# # data["0"]["fake_tiles"] = np.genfromtxt('border_Eindhoven.csv', delimiter=',', dtype=None, encoding='utf-8').tolist()
+# #
+# # data["0"]["fake_tiles"] = city.convert_Niels_array(data["0"]["fake_tiles"]).tolist()
+# # data["0"]["fake_tiles"] = np.rot90(data["0"]["fake_tiles"]).tolist()
 #
 # with open('city_data.json', 'w') as jsonfile:
 #     json.dump(data, jsonfile, indent=2)

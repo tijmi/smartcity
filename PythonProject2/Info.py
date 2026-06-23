@@ -8,7 +8,7 @@ type_effect = {
     "bare_soil": 0,
     "built_low_char": 0,
     "built_high_char": 0,
-    "appartment_char": 0,
+    "apartment_char": 0,
     "canals_char": 0.3,
     "lakes_char": 0.3,
     "parks_char": 0.3,
@@ -27,7 +27,7 @@ type_roughness = {
     "bare_soil": 0.005,
     "built_low_char": 1,
     "built_high_char": 2,
-    "appartment_char": 2,
+    "apartment_char": 2,
     "canals_char": 0.005,
     "lakes_char": 0.005,
     "parks_char": 0.5,
@@ -38,6 +38,6 @@ type_roughness = {
 
 grid_size = (6, 8)
 
-types = ("built_low", "built_high", "trees", "low_veg", "water", "sea", "farmland", "bare_soil", "built_low_char", "built_high_char", "appartment_char", "canals_char", "lakes_char", "parks_char", "forests_char", "farmland_char") # string list
+types = ("built_low", "built_high", "trees", "low_veg", "water", "sea", "farmland", "bare_soil", "built_low_char", "built_high_char", "apartment_char", "canals_char", "lakes_char", "parks_char", "forests_char", "farmland_char") # string list
 
 subtile_amount = 9 # 2x2 within tile

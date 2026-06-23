@@ -9,6 +9,8 @@
 
 CRGB leds[NUM_LEDS]; // Make array of LEDs
 
+void turnOnLeds(int count);
+
 void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
@@ -30,9 +32,9 @@ void loop() {
 
       turnOnLeds(nrOfDeaths);
 
-      int mappedDeaths = int(map(nrOfDeaths, 0, 60, 0, 255), 0, 255); // Map to 255
+      int mappedDeaths = map(nrOfDeaths, 0, 60, 0, 255); // Map to 255
 
-      // Acitvate heart
+      // Activate heart
       analogWrite(HEART_PIN, mappedDeaths);
     }
   }

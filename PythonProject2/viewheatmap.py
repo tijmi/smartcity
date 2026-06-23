@@ -22,9 +22,3 @@ class GameDisplay:
         except FileNotFoundError:
             self.screen.fill((255, 0, 0))
             pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.running = False

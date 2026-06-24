@@ -45,11 +45,11 @@ def receive_data():
 
     print(data)
 
-    if 'tile_id' in data and 'tile_type_id' in data:
+    if 'tile_id' in data and 'tile_type' in data:
         tile_id = data.get('tile_id')
-        tile_type = data.get('tile_type_id')
+        tile_type_id = data.get('tile_type')
         with state_lock:
-            state["tile_type_id"] = tile_type
+            state["tile_type_id"] = tile_type_id
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
 

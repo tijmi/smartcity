@@ -25,7 +25,7 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type_id": None,
-    "city_update": 0, # start in Eindhoven
+    "city_update": 5, # start in Eindhoven
     "month_update": 1 # start in January
 }
 state_lock = threading.Lock()
@@ -45,11 +45,11 @@ def receive_data():
 
     print(data)
 
-    if 'tile_id' in data and 'tile_type_id' in data:
+    if 'tile_id' in data and 'tile_type' in data:
         tile_id = data.get('tile_id')
-        tile_type = data.get('tile_type_id')
+        tile_type_id = data.get('tile_type')
         with state_lock:
-            state["tile_type_id"] = tile_type
+            state["tile_type_id"] = tile_type_id
             state["tile_id"] = tile_id
         return jsonify({"status": "ok"})
 
@@ -72,22 +72,15 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap()
-    borders = Borders()
+    heatmap = Heatmap(1)
+    borders = Borders(heatmap.size)
+
 
     player_id = None
-    # game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
-    clock = pygame.time.Clock()
     temperature = 0
     death = 0
 
-    update_done = threading.Event()  # add here
-
     while True:
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         pygame.quit()
-        #         return
 
         if allow_fake_input: detect_fake_input()
 
@@ -107,6 +100,7 @@ def main():
         if city_id is not None:
             print(f"new city received: {city_id}")
             city.update_city(city_id)
+            heatmap.update_border(borders.get_border(city.name))
 
         if tile_type_id is not None and tile_id is not None:
             print(f"new tile received: {tile_id}, type: {tile_type_id}")
@@ -124,8 +118,8 @@ def main():
                 player_id = tile_id
 
         if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
-            update_done.clear()
-            threading.Thread(target=lambda: [update_everything(tile_manager, city, calculator, heatmap), update_done.set()], daemon=True).start()
+
+            update_everything(tile_manager, city, calculator, heatmap)
 
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
@@ -135,13 +129,6 @@ def main():
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
-
-        # update display only when heatmap file is freshly written
-        # if update_done.is_set():
-        #     game.update()
-        #     update_done.clear()
-
-        # clock.tick(60)
 
 
 def update_everything(tile_manager, city, calculator, heatmap):

@@ -6595,7 +6595,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -6617,7 +6617,7 @@
         "farmland"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -6639,7 +6639,7 @@
         "farmland"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -6661,7 +6661,7 @@
         "farmland"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -6683,7 +6683,7 @@
         "farmland"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -6705,7 +6705,7 @@
         "farmland"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10078,7 +10078,7 @@
         "water"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10100,7 +10100,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10122,7 +10122,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10144,7 +10144,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10166,7 +10166,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -10188,7 +10188,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -12879,7 +12879,7 @@
     "name": "Scheveningen",
     "fake_tiles": [
       [
-        "bare_soil",
+        "farmland",
         "low_veg",
         "low_veg",
         "low_veg",
@@ -12901,7 +12901,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -12923,7 +12923,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -12945,7 +12945,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -12967,7 +12967,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -12989,7 +12989,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13011,7 +13011,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13033,7 +13033,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13055,7 +13055,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13077,7 +13077,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13099,7 +13099,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13121,7 +13121,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13143,7 +13143,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13165,7 +13165,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13187,7 +13187,7 @@
         "low_veg"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13209,7 +13209,7 @@
         "low_veg"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13231,7 +13231,7 @@
         "low_veg"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13253,7 +13253,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13275,7 +13275,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13297,7 +13297,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13319,7 +13319,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13341,7 +13341,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13363,7 +13363,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13385,7 +13385,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13407,7 +13407,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -13429,7 +13429,7 @@
         "built_high"
       ],
       [
-        "bare_soil",
+        "farmland",
         "built_high",
         "built_high",
         "built_high",
@@ -23102,9 +23102,9 @@
         "built_high",
         "built_high",
         "built_high",
-        "bare_soil",
-        "bare_soil",
-        "bare_soil",
+        "farmland",
+        "farmland",
+        "farmland",
         "built_low"
       ]
     ],
@@ -29260,7 +29260,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -29282,7 +29282,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -29304,7 +29304,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -29326,7 +29326,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -29348,7 +29348,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",
@@ -29370,7 +29370,7 @@
         "built_low"
       ],
       [
-        "bare_soil",
+        "farmland",
         "-999",
         "-999",
         "-999",

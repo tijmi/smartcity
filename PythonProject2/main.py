@@ -157,7 +157,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         }
     
     x = int(player_id % grid_size[0])
-    y = int(player_id // grid_size[1])
+    y = int(player_id // grid_size[0])
 
 
     wind, uhi, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature, death)

@@ -6,8 +6,10 @@ from scipy.ndimage import gaussian_filter
 
 class Heatmap:
 
-    def __init__(self, screen_index=0):
+    def __init__(self, screen_index=0, display_tile_type=False):
         from screeninfo import get_monitors
+
+        self.display_tile_type = display_tile_type
 
         # ---------------------------------------------------------------------
         # Remove the toolbar
@@ -76,6 +78,37 @@ class Heatmap:
         )
 
         # ---------------------------------------------------------------------
+        # Layer 3: tile type/id overlay
+        if display_tile_type:
+
+            # Calculate the size of full tiles ( 9x9 subtiles )
+            grid_rows, grid_cols = 8, 6
+            x0, x1, y1, y0 = self.extent  # left, right, bottom, top
+            tile_w = (x1 - x0) / grid_cols
+            tile_h = (y1 - y0) / grid_rows
+
+            # Calculate the center coordinates for each tile
+            self.full_tile_centers = np.array([
+                (x0 + (col + 0.5) * tile_w, y0 + (row + 0.5) * tile_h)
+                for row in range(grid_rows)
+                for col in range(grid_cols)
+            ])
+
+            # placeholder values
+            placeholder_grid2 = np.zeros(grid_rows * grid_cols)
+
+            self.scatter = self.axis.scatter(
+                self.full_tile_centers[:, 0],  # x
+                self.full_tile_centers[:, 1],  # y
+                c=placeholder_grid2,  # values
+                cmap='Set1',
+                vmin=0, vmax=10,
+                s=400,  # marker size
+                marker='o',  # circle
+                zorder=2,
+            )
+
+        # ---------------------------------------------------------------------
         # Set the plot as interactive, allowing updates and show the plot
         plt.ion()
         plt.show()
@@ -97,6 +130,12 @@ class Heatmap:
         self.city_border_day.set_alpha(alpha)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
+
+    def update_grid_ids(self, new_grid):
+        if self.display_tile_type:
+            self.scatter.set_array(new_grid.flatten())
+            self.fig.canvas.draw_idle()
+            self.fig.canvas.flush_events()
 
     @property
     def size(self):

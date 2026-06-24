@@ -1,9 +1,6 @@
-import pygame
-
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
-from Info import subtile_amount, grid_size
 from flask import Flask, json, request, jsonify
 import threading
 import requests
@@ -14,6 +11,7 @@ import socket
 from BeamerAssembler import Heatmap
 from BorderImages import Borders
 import numpy as np
+from Output import build_player_output
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
@@ -82,7 +80,7 @@ def main():
 
     while True:
 
-        if allow_fake_input: detect_fake_input()
+        if allow_fake_input: create_fake_input()
 
         with state_lock:
             tile_id = state.pop("tile_id", None)
@@ -139,86 +137,10 @@ def update_everything(tile_manager, city, calculator, heatmap):
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     heatmap.update_grid(UHI_array)
 
-
-# Collect all player output data and return
-def build_player_output(player_id, tile_manager, city, temperature, death):
-    if player_id is None:
-        return {
-            "uhi": 0,
-            "wind": 0,
-            "land_use": 0,
-            "death": 0,
-            "city": None,
-            "neighbors": {
-                "front": None,
-                "left": None,
-                "right": None
-            }
-        }
-    
-    # Convert tile id to x, y index of array
-    x = int(player_id % grid_size[0])
-    y = int(player_id // grid_size[0])
-
-
-    wind, uhi, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature, death)
-
-    tile = tile_manager.tiles[x, y]
-
-    def get_neighbor_type(nx, ny):
-        if 0 <= nx < grid_size[0] and 0 <= ny < grid_size[1]:
-            return tile_manager.tiles[nx, ny].type
-        else:
-            return city.fake_tiles[nx + 1, ny + 1]
-
-    # Population of straight neighbours
-    population = tile.population + tile_manager.tiles[x + 1, y].population + tile_manager.tiles[x - 1, y].population + tile_manager.tiles[x, y + 1].population + tile_manager.tiles[x, y - 1].population
-
-
-    # neighbors: for connect with scene in Unity
-    return{
-        "uhi": uhi,
-        "wind": wind,
-        "land_use": tile.type,
-        "death": death_to_UHI,
-        "city": city.name,
-        "population": int(population / 45),
-        "neighbors":{
-            "front": get_neighbor_type(x-1, y),
-            "left": get_neighbor_type(x, y-1),
-            "right": get_neighbor_type(x, y+1),
-        }
-    }
-
 def send_state(state: dict):
     msg = json.dumps(state).encode()
     print(msg)
     sock.sendto(msg, (UDP_IP, UDP_PORT))
-
-def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
-    # Get UHI and wind data at player location
-    wind_data = city.city_data[player_pos[0]][player_pos[1]]["ws_100m_alt"]
-
-    total_wind = 0
-
-    tile = tile_manager.tiles[player_pos] # Tile of player
-    total_UHI = 0
-    for subtile in tile.subtiles.flat: # For each subtile within the player's tile
-        total_UHI += subtile.UHI # Get subtile UHI
-        total_wind += wind_data # Get subtile wind
-
-    # Final data to output
-    average_UHI = total_UHI / subtile_amount
-    average_wind = total_wind / subtile_amount
-
-    if temperature > 22:
-        death_to_UHI = int(death * (0.0284 * average_UHI))
-    elif temperature > 16:
-        death_to_UHI = int(death * (0.0157 * average_UHI))
-    else:
-        death_to_UHI = 0
-
-    return average_wind, average_UHI, death_to_UHI
 
 def send_output(output):
     try:
@@ -231,7 +153,7 @@ def send_output(output):
         print("unity error")
         print(f"error {e}")
 
-def detect_fake_input():
+def create_fake_input():
     if random.randint(0, 1000000) == 1:
         with state_lock:
             state["tile_type"] = random.randint(0, 6) # Random tile type

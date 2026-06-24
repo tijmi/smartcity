@@ -16,10 +16,9 @@ class TileManager:
 
     def update_tile(self, position, type_id):
 
-        x = math.floor(position % grid_size[0])
-        y = math.floor(position // grid_size[0])
+        x, y = self.get_tile_position(position)
 
-        print(f"tile_location: {x}, {y}")
+        print(f"tile_location: {x}, {y}, type_id: {type_id}")
 
         self.tiles[x, y] = Tile((x, y), type_id) # Place new tile
 
@@ -43,3 +42,8 @@ class TileManager:
             tile_population += tile.population
             tile_soil_sealing += tile.soil_sealing
         return tile_soil_sealing, tile_population
+    
+    def get_tile_position(self, tile_id):
+        x = math.floor(tile_id % grid_size[0])
+        y = math.floor(tile_id // grid_size[0])
+        return (x, y)

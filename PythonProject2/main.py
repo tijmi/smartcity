@@ -24,7 +24,7 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type_id": None,
-    "city_update": 5, # start in Eindhoven
+    "city_update": 1, # start in Den Helder
     "month_update": 1 # start in January
 }
 state_lock = threading.Lock()
@@ -42,7 +42,7 @@ def receive_data():
     if not isinstance(data, dict):
         return jsonify({"status": "error", "message": "Expected JSON object"}), 400
 
-    print(data)
+    # print(data)
 
     if 'tile_id' in data and 'tile_type' in data:
         tile_id = data.get('tile_id')
@@ -103,7 +103,6 @@ def main():
             print(f"new city received: {city_id}, {city.name}")
 
         if tile_type_id is not None and tile_id is not None: # If new tile
-            print(f"new tile received: {tile_id}, type: {tile_type_id}")
 
             if tile_id == player_id: # If player got replaced with tile
                 player_id = None
@@ -123,7 +122,7 @@ def main():
 
         if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
 
-            update_everything(tile_manager, city, calculator, heatmap)
+            update_everything(tile_manager, city, calculator, heatmap, tile_id)
 
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
@@ -135,7 +134,7 @@ def main():
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
 
-def update_everything(tile_manager, city, calculator, heatmap, new_tile_grid_pos=None):
+def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
     get_UHI = np.vectorize(lambda subtile: subtile.UHI)
@@ -150,7 +149,8 @@ def update_everything(tile_manager, city, calculator, heatmap, new_tile_grid_pos
         type_array = get_type(tile_manager.tiles)
         heatmap.update_grid_ids(type_array)
 
-    if new_tile_grid_pos is not None:
+    if new_tile_id is not None:
+        new_tile_grid_pos = tile_manager.get_tile_position(new_tile_id)
         print(f"UHI of new tile: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
 
 def send_state(state: dict):
@@ -162,7 +162,8 @@ def send_output(output):
     try:
         resp = requests.post(url_input, json=output, timeout=1)
     except Exception as e:
-        print(f"error {e}")
+        # print(f"error {e}")
+        pass
     try:
         send_state(output)
     except Exception as e:

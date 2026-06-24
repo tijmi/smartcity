@@ -88,7 +88,7 @@ class Heatmap:
             placeholder_grid,
             extent=self.extent,
             interpolation='catrom',
-            cmap="Oranges",
+            cmap="RdYlGn_r",
             vmin=0, vmax=4,
         )
 
@@ -115,12 +115,11 @@ class Heatmap:
         self.spotlight = self.axis.scatter(
             [self.full_tile_centers[0, 0]],  # placeholder x
             [self.full_tile_centers[0, 1]],  # placeholder y
-            s=border_length*border_length,  # Border length = tile length, already computed
-            c='white',
+            s=(border_length*border_length) * 0.5,  # Border length = tile length, already computed
             alpha=0.0,  # hidden at start
             zorder=3,
-            linewidths=2,  # stroke width
-            edgecolors='white',  # stroke color
+            linewidths=5,  # stroke width
+            edgecolors='black',  # stroke color
         )
 
         # ---------------------------------------------------------------------
@@ -135,7 +134,7 @@ class Heatmap:
         self.fig.canvas.flush_events()
 
     def update_grid(self, new_grid):
-        smoothed = gaussian_filter(new_grid, sigma=2.5)
+        smoothed = new_grid #gaussian_filter(new_grid, sigma=2.5)
         self.heatmap.set_data(smoothed)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()

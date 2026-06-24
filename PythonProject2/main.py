@@ -134,10 +134,9 @@ def main():
 def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
+    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     get_UHI = np.vectorize(lambda subtile: subtile.UHI)
     UHI_array = get_UHI(all_subtiles)
-
-    calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     heatmap.update_grid(UHI_array)
 
     # Display tile types if enabled

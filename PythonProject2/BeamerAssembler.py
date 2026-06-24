@@ -28,7 +28,7 @@ class Heatmap:
 
         manager.window.wm_geometry(f"{target.width}x{target.height}+{target.x}+{target.y}")
         plt.pause(0.1)
-        manager.window.wm_overrideredirect(True)
+        # manager.window.wm_overrideredirect(True)
 
         # Set the backgrounds to black
         self.fig.patch.set_facecolor('black')

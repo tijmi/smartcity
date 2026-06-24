@@ -73,7 +73,8 @@ def main():
     calculator = Calculator()
     city = City()
     heatmap = Heatmap()
-    borders = Borders()
+    borders = Borders(heatmap.size)
+
 
     player_id = None
     # game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
@@ -107,6 +108,7 @@ def main():
         if city_id is not None:
             print(f"new city received: {city_id}")
             city.update_city(city_id)
+            heatmap.update_border(borders.get_border(city.name))
 
         if tile_type_id is not None and tile_id is not None:
             print(f"new tile received: {tile_id}, type: {tile_type_id}")

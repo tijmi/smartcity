@@ -108,7 +108,6 @@ def main():
                 player_id = None
                 build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
-                print("Output: 0")
 
                 heatmap.clear_spotlight() # Clear spotlight if player got replaced with tile
 
@@ -127,11 +126,9 @@ def main():
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
-                print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
             else:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
-                print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
 
 def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None):
@@ -160,7 +157,7 @@ def send_state(state: dict):
 
 def send_output(output):
     try:
-        resp = requests.post(url_input, json=output, timeout=1)
+        resp = requests.post(url_output, json=output, timeout=1)
     except Exception as e:
         # print(f"error {e}")
         pass

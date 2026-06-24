@@ -117,6 +117,7 @@ class Heatmap:
             [self.full_tile_centers[0, 1]],  # placeholder y
             s=(border_length*border_length) * 0.5,  # Border length = tile length, already computed
             alpha=0.0,  # hidden at start
+            facecolors=None,
             zorder=3,
             linewidths=3,  # stroke width
             edgecolors='black',  # stroke color

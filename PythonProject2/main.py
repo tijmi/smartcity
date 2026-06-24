@@ -156,6 +156,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             }
         }
     
+    # Convert tile id to x, y index of array
     x = int(player_id % grid_size[0])
     y = int(player_id // grid_size[0])
 

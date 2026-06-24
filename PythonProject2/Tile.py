@@ -12,6 +12,7 @@ class Tile:
 
     def __init__(self, grid_pos, type_id):
         self.grid_pos = grid_pos
+        self.type_id = type_id
         with open(TILE_TYPES_PATH, 'r') as jsonfile:
             data = json.load(jsonfile)
 

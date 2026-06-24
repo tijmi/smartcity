@@ -16,6 +16,7 @@ from Output import build_player_output
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
 allow_fake_input = False
+use_type_dots = True
 
 app = Flask(__name__)
 
@@ -70,7 +71,7 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap(1)
+    heatmap = Heatmap(1, True)
     borders = Borders(heatmap.size)
 
 
@@ -103,17 +104,21 @@ def main():
         if tile_type_id is not None and tile_id is not None:
             print(f"new tile received: {tile_id}, type: {tile_type_id}")
 
-            if tile_id == player_id:
+            if tile_id == player_id: # If player got replaced with tile
                 player_id = None
                 build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
-                print("Output: 0, 0, 0")
+                print("Output: 0")
 
-            if tile_type_id <= 6:
+                heatmap.clear_spotlight() # Clear spotlight if player got replaced with tile
+
+            if tile_type_id <= 6: # If not player
                 tile_manager.update_tile(tile_id, tile_type_id)
-            else:
+            else: # If player
                 tile_manager.update_tile(tile_id, tile_type_id)
                 player_id = tile_id
+
+                heatmap.set_spotlight(player_id) # Update spotlight if player got added
 
         if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
 
@@ -134,8 +139,15 @@ def update_everything(tile_manager, city, calculator, heatmap):
     all_subtiles = tile_manager.get_subtiles()
     get_UHI = np.vectorize(lambda subtile: subtile.UHI)
     UHI_array = get_UHI(all_subtiles)
+
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
     heatmap.update_grid(UHI_array)
+
+    # Display tile types if enabled
+    if use_type_dots:
+        get_type = np.vectorize(lambda tile: tile.type_id)
+        type_array = get_type(tile_manager.tiles)
+        heatmap.update_grid_ids(type_array)
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()

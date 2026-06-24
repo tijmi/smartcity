@@ -89,19 +89,20 @@ def main():
             city_id = state.pop("city_update", None)
             month = state.pop("month_update", None)
 
-        if month is not None:
+        if month is not None: # If new month
             print(f"new month received: {month}")
             with open(Path(__file__).parent / "month_data.json", 'r') as jsonfile:
                 month_data = json.load(jsonfile)
                 temperature = month_data[str(month)]["temperature"]
                 death = month_data[str(month)]["death"]
 
-        if city_id is not None:
-            print(f"new city received: {city_id}")
+        if city_id is not None: # If new city
             city.update_city(city_id)
             heatmap.update_border(borders.get_border(city.name))
 
-        if tile_type_id is not None and tile_id is not None:
+            print(f"new city received: {city_id}, {city.name}")
+
+        if tile_type_id is not None and tile_id is not None: # If new tile
             print(f"new tile received: {tile_id}, type: {tile_type_id}")
 
             if tile_id == player_id: # If player got replaced with tile
@@ -134,7 +135,7 @@ def main():
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
 
-def update_everything(tile_manager, city, calculator, heatmap):
+def update_everything(tile_manager, city, calculator, heatmap, new_tile_grid_pos=None):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
     get_UHI = np.vectorize(lambda subtile: subtile.UHI)
@@ -148,6 +149,9 @@ def update_everything(tile_manager, city, calculator, heatmap):
         get_type = np.vectorize(lambda tile: tile.type_id)
         type_array = get_type(tile_manager.tiles)
         heatmap.update_grid_ids(type_array)
+
+    if new_tile_grid_pos is not None:
+        print(f"UHI of new tile: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()

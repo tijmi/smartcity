@@ -1,8 +1,11 @@
+import math
+
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import gaussian_filter
+from Info import grid_size
 
 class Heatmap:
 
@@ -150,7 +153,8 @@ class Heatmap:
             self.fig.canvas.flush_events()
 
     def set_spotlight(self, tile_index):
-        x, y = self.full_tile_centers[tile_index]
+        row_major_idx = (tile_index % self.grid[0]) * self.grid[1] + (tile_index // self.grid[0])
+        x, y = self.full_tile_centers[row_major_idx]
         self.spotlight.set_offsets([[x, y]])
         self.spotlight.set_alpha(1.0)
         self.fig.canvas.draw_idle()

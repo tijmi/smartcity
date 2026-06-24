@@ -45,11 +45,11 @@ class Heatmap:
         total_rows = 90
 
         # Compute the tile size in pixels (height is limiting, portrait grid in a landscape window)
-        tile_side_length = round(screen_h / total_rows)
-        border_length = tile_side_length * 9
+        subtile_side_length = round(screen_h / total_rows)
+        border_length = subtile_side_length * 9
 
         # Compute the window width and height for consistent and proportional sizes
-        self.display_w, self.display_h = total_cols * tile_side_length, total_rows * tile_side_length
+        self.display_w, self.display_h = total_cols * subtile_side_length, total_rows * subtile_side_length
 
         # Create the image extent
         self.extent_image = [0, self.display_w, self.display_h, 0]
@@ -109,6 +109,19 @@ class Heatmap:
             )
 
         # ---------------------------------------------------------------------
+        # Layer 4: player spotlight overlay
+        self.spotlight = self.axis.scatter(
+            [self.full_tile_centers[0, 0]],  # placeholder x
+            [self.full_tile_centers[0, 1]],  # placeholder y
+            s=border_length*border_length,  # Border length = tile length, already computed
+            c='white',
+            alpha=0.0,  # hidden at start
+            zorder=3,
+            linewidths=2,  # stroke width
+            edgecolors='white',  # stroke color
+        )
+
+        # ---------------------------------------------------------------------
         # Set the plot as interactive, allowing updates and show the plot
         plt.ion()
         plt.show()
@@ -136,6 +149,18 @@ class Heatmap:
             self.scatter.set_array(new_grid.flatten())
             self.fig.canvas.draw_idle()
             self.fig.canvas.flush_events()
+
+    def set_spotlight(self, tile_index):
+        x, y = self.full_tile_centers[tile_index]
+        self.spotlight.set_offsets([[x, y]])
+        self.spotlight.set_alpha(1.0)
+        self.fig.canvas.draw_idle()
+        self.fig.canvas.flush_events()
+
+    def clear_spotlight(self):
+        self.spotlight.set_alpha(0.0)
+        self.fig.canvas.draw_idle()
+        self.fig.canvas.flush_events()
 
     @property
     def size(self):

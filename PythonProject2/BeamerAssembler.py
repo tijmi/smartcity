@@ -88,7 +88,7 @@ class Heatmap:
             placeholder_grid,
             extent=self.extent,
             interpolation='catrom',
-            cmap="RdYlGn",
+            cmap="RdYlGn_r",
             vmin=0, vmax=4,
         )
 

@@ -148,7 +148,7 @@ def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None)
 
     if new_tile_id is not None:
         new_tile_grid_pos = tile_manager.get_tile_position(new_tile_id)
-        print(f"UHI of new tile: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
+        print(f"UHI of new tile: {new_tile_grid_pos[0]}, {new_tile_grid_pos[1]}: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()
@@ -172,12 +172,12 @@ def create_fake_input():
         with state_lock:
             state["tile_type"] = random.randint(0, 6) # Random tile type
             state["tile_id"] = random.randint(0, 47) # Random location
-    if random.randint(0, 1000000) == 1:
-        with state_lock:
-            state["city_update"] = random.randint(0, 9) # Random city
-    if random.randint(0, 1000000) == 1:
-        with state_lock:
-            state["month_update"] = random.randint(1, 12) # Random month
+    # if random.randint(0, 1000000) == 1:
+    #     with state_lock:
+    #         state["city_update"] = random.randint(0, 9) # Random city
+    # if random.randint(0, 1000000) == 1:
+    #     with state_lock:
+    #         state["month_update"] = random.randint(1, 12) # Random month
     if random.randint(0, 2000000) == 1:
         with state_lock:
             state["tile_type"] = random.randint(7, 14) # Random character tile

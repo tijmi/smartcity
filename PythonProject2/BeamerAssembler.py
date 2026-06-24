@@ -27,7 +27,7 @@ class Heatmap:
 
         # Move the window to the specific screen and set it to fullscreen
         monitors = get_monitors()
-        target = monitors[screen_index]
+        target = monitors[0]
         print(f"window.wm_geometry(+{target.x}+{target.y})")
         manager = plt.get_current_fig_manager()
 

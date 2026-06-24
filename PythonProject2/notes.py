@@ -1,0 +1,1 @@
+row_major_idx = (col_major_idx % 8) * 6 + (col_major_idx // 8)

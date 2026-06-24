@@ -11,7 +11,7 @@ class TileManager:
         self.tiles = np.empty(shape=grid_size, dtype=object)
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
-                self.tiles[i, j] = Tile((i, j), random.randint(0, 6)) # Place random tile in each position
+                self.tiles[i, j] = Tile((i, j), 0) # Place random tile in each position
 
 
     def update_tile(self, position, type_id):

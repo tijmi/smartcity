@@ -6,7 +6,7 @@ from scipy.ndimage import gaussian_filter
 
 class Heatmap:
 
-    def __init__(self):
+    def __init__(self, screen_index=0):
         from screeninfo import get_monitors
 
         # ---------------------------------------------------------------------
@@ -22,7 +22,7 @@ class Heatmap:
 
         # Move the window to the specific screen and set it to fullscreen
         monitors = get_monitors()
-        target = monitors[0]
+        target = monitors[screen_index]
         print(f"window.wm_geometry(+{target.x}+{target.y})")
         manager = plt.get_current_fig_manager()
 

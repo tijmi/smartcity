@@ -25,7 +25,7 @@ app = Flask(__name__)
 state = {
     "tile_id": None,
     "tile_type_id": None,
-    "city_update": 0, # start in Eindhoven
+    "city_update": 5, # start in Eindhoven
     "month_update": 1 # start in January
 }
 state_lock = threading.Lock()
@@ -72,23 +72,15 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap()
+    heatmap = Heatmap(1)
     borders = Borders(heatmap.size)
 
 
     player_id = None
-    # game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
-    clock = pygame.time.Clock()
     temperature = 0
     death = 0
 
-    update_done = threading.Event()  # add here
-
     while True:
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         pygame.quit()
-        #         return
 
         if allow_fake_input: detect_fake_input()
 
@@ -126,8 +118,8 @@ def main():
                 player_id = tile_id
 
         if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
-            update_done.clear()
-            threading.Thread(target=lambda: [update_everything(tile_manager, city, calculator, heatmap), update_done.set()], daemon=True).start()
+
+            update_everything(tile_manager, city, calculator, heatmap)
 
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
@@ -137,13 +129,6 @@ def main():
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
                 send_output(output)
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
-
-        # update display only when heatmap file is freshly written
-        # if update_done.is_set():
-        #     game.update()
-        #     update_done.clear()
-
-        # clock.tick(60)
 
 
 def update_everything(tile_manager, city, calculator, heatmap):

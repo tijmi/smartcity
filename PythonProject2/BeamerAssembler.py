@@ -153,7 +153,7 @@ class Heatmap:
             self.fig.canvas.flush_events()
 
     def set_spotlight(self, tile_index):
-        row_major_idx = (tile_index % self.grid[0]) * self.grid[1] + (tile_index // self.grid[0])
+        row_major_idx = (tile_index % grid_size[0]) * grid_size[1] + (tile_index // grid_size[0])
         x, y = self.full_tile_centers[row_major_idx]
         self.spotlight.set_offsets([[x, y]])
         self.spotlight.set_alpha(1.0)

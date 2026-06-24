@@ -60,6 +60,18 @@ class Heatmap:
         self.axis.set_xlim(0, self.display_w)
         self.axis.set_ylim(self.display_h, 0)
 
+        # Calculate the size of full tiles ( 9x9 subtiles )
+        grid_rows, grid_cols = 8, 6
+        x0, x1, y1, y0 = self.extent  # left, right, bottom, top
+        tile_w = (x1 - x0) / grid_cols
+        tile_h = (y1 - y0) / grid_rows
+
+        # Calculate the center coordinates for each tile
+        self.full_tile_centers = np.array([
+            (x0 + (col + 0.5) * tile_w, y0 + (row + 0.5) * tile_h)
+            for row in range(grid_rows)
+            for col in range(grid_cols)
+        ])
         # ---------------------------------------------------------------------
         # Layer 1: city border
         placeholder_border = np.zeros((self.display_h, self.display_w, 3), dtype=np.uint8)
@@ -81,19 +93,6 @@ class Heatmap:
         # Layer 3: tile type/id overlay
         if display_tile_type:
 
-            # Calculate the size of full tiles ( 9x9 subtiles )
-            grid_rows, grid_cols = 8, 6
-            x0, x1, y1, y0 = self.extent  # left, right, bottom, top
-            tile_w = (x1 - x0) / grid_cols
-            tile_h = (y1 - y0) / grid_rows
-
-            # Calculate the center coordinates for each tile
-            self.full_tile_centers = np.array([
-                (x0 + (col + 0.5) * tile_w, y0 + (row + 0.5) * tile_h)
-                for row in range(grid_rows)
-                for col in range(grid_cols)
-            ])
-
             # placeholder values
             placeholder_grid2 = np.zeros(grid_rows * grid_cols)
 
@@ -101,8 +100,8 @@ class Heatmap:
                 self.full_tile_centers[:, 0],  # x
                 self.full_tile_centers[:, 1],  # y
                 c=placeholder_grid2,  # values
-                cmap='Set1',
-                vmin=0, vmax=10,
+                cmap='tab20',
+                vmin=0, vmax=14,
                 s=400,  # marker size
                 marker='o',  # circle
                 zorder=2,

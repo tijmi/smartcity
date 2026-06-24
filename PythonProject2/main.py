@@ -3,7 +3,6 @@ import pygame
 from TileManager import TileManager
 from Calculator import Calculator
 from City import City
-from Heatmap_Creator import Heatmap_Creator
 from Info import subtile_amount, grid_size
 from flask import Flask, json, request, jsonify
 import threading
@@ -12,11 +11,13 @@ from pathlib import Path
 import random
 import json
 import socket
-import viewheatmap
+from BeamerAssembler import Heatmap
+from BorderImages import Borders
+import numpy as np
 
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
-allow_fake_input = True
+allow_fake_input = False
 
 app = Flask(__name__)
 
@@ -71,9 +72,11 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap_Creator()
+    heatmap = Heatmap()
+    borders = Borders()
+
     player_id = None
-    game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
+    # game = viewheatmap.GameDisplay(1600, 900, "heatmap.png", display_index=1)
     clock = pygame.time.Clock()
     temperature = 0
     death = 0
@@ -81,10 +84,10 @@ def main():
     update_done = threading.Event()  # add here
 
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         pygame.quit()
+        #         return
 
         if allow_fake_input: detect_fake_input()
 
@@ -134,18 +137,20 @@ def main():
                 print(f"output: {output['wind']}, {output['uhi']}, {output['death']}")
 
         # update display only when heatmap file is freshly written
-        if update_done.is_set():
-            game.update()
-            update_done.clear()
+        # if update_done.is_set():
+        #     game.update()
+        #     update_done.clear()
 
-        clock.tick(60)
+        # clock.tick(60)
 
 
 def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
+    get_UHI = np.vectorize(lambda subtile: subtile.UHI)
+    UHI_array = get_UHI(all_subtiles)
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
-    heatmap.update_heatmap(all_subtiles)
+    heatmap.update_grid(UHI_array)
 
 
 # Collect all player output data and return
@@ -199,6 +204,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()
+    print(msg)
     sock.sendto(msg, (UDP_IP, UDP_PORT))
 
 def get_player_loc_data(player_pos, city, tile_manager, temperature, death):

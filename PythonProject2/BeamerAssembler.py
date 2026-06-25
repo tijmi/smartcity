@@ -2,10 +2,12 @@ import math
 
 import matplotlib
 matplotlib.use('TkAgg')
+from matplotlib.colors import LinearSegmentedColormap
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from Info import grid_size
+from cmap import Colormap
 
 class Heatmap:
 
@@ -84,11 +86,12 @@ class Heatmap:
         # ---------------------------------------------------------------------
         # Layer 2: heatmap overlay
         placeholder_grid = np.zeros((total_rows, total_cols, 1), dtype=np.float16)
+        heat_cmap = LinearSegmentedColormap.from_list('heat_cmap', ['green', 'yellow', 'red'], N=7)
         self.heatmap = self.axis.imshow(
             placeholder_grid,
             extent=self.extent,
             interpolation='catrom',
-            cmap="RdYlGn_r",
+            cmap=heat_cmap,
             vmin=0, vmax=3,
         )
 

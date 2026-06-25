@@ -14,7 +14,7 @@ def register_route(app, event_queue):
     def receive_data():
         data = request.get_json()
 
-        debug(data, "EVENT_START")
+        debug(f"Data: {data}", "EVENT_START")
 
         if not isinstance(data, dict):
             return jsonify({"status": "error", "message": "Expected JSON object"}), 400

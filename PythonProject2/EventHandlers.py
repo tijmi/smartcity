@@ -41,22 +41,20 @@ def handle_tile_removed(ctx, item):
     uhi_array = update_grid(ctx, tile_id)
 
     # If the removed tile is a player tile, update accordingly
-    if tile_type > 6:
-        ctx.player.remove_location(tile_id)
-        last_locations = ctx.player.get_latest_location()
-        if last_locations is not None:
-            ctx.heatmap.set_spotlight(last_locations)
-        else:
-            ctx.heatmap.clear_spotlight()
-        build_new_player_output_flag = True
+    ctx.player.remove_location(tile_id)
+    last_locations = ctx.player.get_latest_location()
+    if last_locations is not None:
+        ctx.heatmap.set_spotlight(last_locations)
+    else:
+        ctx.heatmap.clear_spotlight()
+    build_new_player_output_flag = True
 
-    print(ctx.player.get_latest_location())
     # If a new player location is active, send this to unity and peripherals
     if build_new_player_output_flag:
         output = build_player_output(ctx.player.get_latest_location(), ctx.tile_manager, ctx.city, temperature, death)
         ctx.server_out.send_output(output)
 
-    debug(f"Tile of type {tile_type} REMOVED at {tile_id}", "HANDLER_DEBUG")
+    debug(f"Tile REMOVED at {tile_id}", "HANDLER_DEBUG")
     debug(f"UHI of new tile: {uhi_array[ctx.tile_manager.get_tile_position(tile_id)[0], ctx.tile_manager.get_tile_position(tile_id)[1]]}",  "TILE_DATA_DEBUG")
 
 

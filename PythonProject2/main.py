@@ -35,6 +35,8 @@ class AppContext:
 def main_thread(queue):
 
     while True:
+        heatmap.update_grid()
+
         item = queue.get()  # sleeps here until something arrives
         event_type = item.get("event_type")
 

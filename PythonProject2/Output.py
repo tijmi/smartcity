@@ -35,7 +35,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             "wind": 0,
             "land_use": 0,
             "death": 0,
-            "city": None,
+            "city": city.name,
             "population": 0,
             "has_player": False,
             "neighbors": {

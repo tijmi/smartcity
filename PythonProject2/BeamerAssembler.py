@@ -103,7 +103,7 @@ class Heatmap:
                 'blue',  # 0: empty/low_veg
                 'pink',  # 1: suburbs
                 'red',  # 2: built_high
-                'teal',  # 3: water
+                'lightblue',  # 3: water
                 'purple',  # 4: low_veg
                 'lightgreen',  # 5: trees
                 'yellow',  # 6: farm
@@ -123,7 +123,7 @@ class Heatmap:
                 c=placeholder_grid2,  # values
                 cmap=cmap,
                 vmin=0, vmax=14,
-                s=400,  # marker size
+                s=200,  # marker size
                 marker='o',  # circle
                 zorder=2,
             )
@@ -133,12 +133,12 @@ class Heatmap:
         self.spotlight = self.axis.scatter(
             [self.full_tile_centers[0, 0]],  # placeholder x
             [self.full_tile_centers[0, 1]],  # placeholder y
-            s=(border_length*border_length) * 0.5,  # Border length = tile length, already computed
-            alpha=0.0,  # hidden at start
             facecolors=None,
-            zorder=3,
-            linewidths=3,  # stroke width
             edgecolors='black',  # stroke color
+            s=(border_length*border_length) * 0.3,  # Border length = tile length, already computed
+            alpha=0.0,  # hidden at start
+            zorder=3,
+            linewidths=4,  # stroke width
         )
 
         # ---------------------------------------------------------------------
@@ -174,7 +174,7 @@ class Heatmap:
         row_major_idx = (tile_index % grid_size[0]) * grid_size[1] + (tile_index // grid_size[0])
         x, y = self.full_tile_centers[row_major_idx]
         self.spotlight.set_offsets([[x, y]])
-        self.spotlight.set_alpha(1.0)
+        self.spotlight.set_alpha(0.3)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
 

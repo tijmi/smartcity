@@ -121,7 +121,7 @@ def main():
 
         if tile_type_id is not None or tile_id is not None or month is not None or city_id is not None:
 
-            update_everything(tile_manager, city, calculator, heatmap, tile_id)
+            update_everything(tile_manager, city, calculator, heatmap)
 
             if player_id is not None:
                 output = build_player_output(player_id, tile_manager, city, temperature, death)
@@ -131,7 +131,7 @@ def main():
                 send_output(output)
 
 
-def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None):
+def update_everything(tile_manager, city, calculator, heatmap):
     # Update calculations and heatmap
     all_subtiles = tile_manager.get_subtiles()
     calculator.update_calculation(city, all_subtiles, tile_manager.get_soil_population()[1], tile_manager.get_soil_population()[0])
@@ -145,11 +145,6 @@ def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None)
         type_array = get_type(tile_manager.tiles)
         heatmap.update_grid_ids(type_array)
 
-    if new_tile_id is not None:
-        new_tile_grid_pos = tile_manager.get_tile_position(new_tile_id)
-        print(f"UHI of new tile: {new_tile_grid_pos[0]}, {new_tile_grid_pos[1]}: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
-        print(UHI_array)
-
 def send_state(state: dict):
     msg = json.dumps(state).encode()
     print(msg)
@@ -159,7 +154,7 @@ def send_output(output):
     try:
         resp = requests.post(url_output, json=output, timeout=1)
     except Exception as e:
-        # print(f"error {e}")
+        print(f"error {e}")
         pass
     try:
         send_state(output)

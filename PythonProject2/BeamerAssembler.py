@@ -86,7 +86,7 @@ class Heatmap:
         # ---------------------------------------------------------------------
         # Layer 2: heatmap overlay
         placeholder_grid = np.zeros((total_rows, total_cols, 1), dtype=np.float16)
-        heat_cmap = LinearSegmentedColormap.from_list('heat_cmap', ['green', 'yellow', 'red'], N=10)
+        heat_cmap = LinearSegmentedColormap.from_list('heat_cmap', ['green', 'yellow', 'red'], N=9)
         self.heatmap = self.axis.imshow(
             placeholder_grid,
             extent=self.extent,
@@ -156,7 +156,7 @@ class Heatmap:
         self.fig.canvas.flush_events()
 
     def update_grid(self, new_grid):
-        smoothed = gaussian_filter(new_grid, sigma=2.5)
+        smoothed = gaussian_filter(new_grid, sigma=1.5)
         self.heatmap.set_data(smoothed)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()

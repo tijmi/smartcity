@@ -6,6 +6,7 @@ from pathlib import Path
 
 from Info import grid_size, subtile_amount
 
+
 class City:
 
     def __init__(self):

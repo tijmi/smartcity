@@ -8,8 +8,8 @@ import json
 BASE_DIR = Path(__file__).parent
 TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
 
-class Tile:
 
+class Tile:
     def __init__(self, grid_pos, type_id):
         self.grid_pos = grid_pos
         self.type_id = type_id

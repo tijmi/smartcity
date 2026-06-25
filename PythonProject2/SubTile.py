@@ -2,8 +2,8 @@ from Info import subtile_amount
 import math
 from Helper_Functions import get_tile_population, get_tile_soil_sealing
 
-class Subtile:
 
+class Subtile:
     def __init__(self, type, subtile_pos, tile_pos):
         self.type = type
         self.subtile_pos = subtile_pos

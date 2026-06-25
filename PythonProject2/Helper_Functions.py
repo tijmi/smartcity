@@ -24,11 +24,6 @@ def create_fake_input(state, state_lock):
     pass
 
 
-def debug(flag, msg):
-    if getattr(Info, flag):
-        print(msg)
-
-
 # Needs tile_manager,calculator, heatmap, info
 def update_grid(ctx, tile_id):
     all_subtiles = ctx.tile_manager.get_subtiles()

@@ -60,8 +60,5 @@ url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
 
 # Settings
-EVENT_DEBUG = True
-OUTPUT_DEBUG = False
-NEW_TILE_UHI_DEBUG = True
 allow_fake_input = False
 use_type_dots = True

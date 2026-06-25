@@ -2,6 +2,7 @@ from Tile import Tile
 from Info import grid_size, subtile_amount
 import numpy as np
 import math
+from Debugger import debug
 
 
 class TileManager:
@@ -16,7 +17,7 @@ class TileManager:
 
         x, y = self.get_tile_position(position)
 
-        print(f"tile_location: {x}, {y}, type_id: {type_id}")
+        debug(f"tile_location: {x}, {y}, type_id: {type_id}")
 
         self.tiles[x, y] = Tile((x, y), type_id) # Place new tile
 

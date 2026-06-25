@@ -1,6 +1,7 @@
 import math
 from Info import grid_size, subtile_amount
 from Helper_Functions import get_tile_population
+from Debugger import debug
 
 
 def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
@@ -68,7 +69,8 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
                 population += get_tile_population(city.fake_tiles[(i * int(math.sqrt(subtile_amount))) + 1, j * int(math.sqrt(subtile_amount)) + 1])
 
     # neighbors: for connect with scene in Unity
-    return{
+
+    output = {
         "uhi": uhi,
         "wind": wind,
         "land_use": tile.type,
@@ -81,3 +83,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             "right": get_neighbor_type(x, y+1),
         }
     }
+
+    debug(f"Output data: {output}")
+
+    return output

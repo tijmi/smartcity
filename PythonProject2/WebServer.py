@@ -1,5 +1,6 @@
 from flask import request, jsonify
 import threading
+from Debugger import debug
 
 
 def push_new_event(event_queue, event_type, payload):
@@ -12,21 +13,22 @@ def register_route(app, event_queue):
     @app.route('/input', methods=['GET', 'POST'])
     def receive_data():
         data = request.get_json()
+
+        debug(data, "EVENT_START")
+
         if not isinstance(data, dict):
             return jsonify({"status": "error", "message": "Expected JSON object"}), 400
 
         if 'tile_id' in data and 'tile_type' in data:
-            print(f"Received tile event: {data}")
             if data.get('tile_type') == 0:
-                print("remooooooooooooooooooooooooooodr")
                 event_queue.put({"event_type": "tile_removed", "data": {
                     "tile_id": data.get('tile_id'),
-                    "tile_type_id": data.get('tile_type')
+                    "tile_type": data.get('tile_type')
                 }})
             else:
                 event_queue.put({"event_type": "tile_placed", "data": {
                     "tile_id": data.get('tile_id'),
-                    "tile_type_id": data.get('tile_type')
+                    "tile_type": data.get('tile_type')
                 }})
             return jsonify({"status": "ok"})
 

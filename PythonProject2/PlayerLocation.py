@@ -1,4 +1,5 @@
 from collections import deque
+from Debugger import debug
 
 
 class PlayerLocation:
@@ -7,11 +8,12 @@ class PlayerLocation:
 
     def new_location(self, tile_id):
         self.location_buffer.append(tile_id) # Add the newest location
-        print(self.location_buffer)
+        debug(f"New player location: {tile_id}", "PLAYER_DEBUG")
 
     def remove_location(self, tile_id):
         self.location_buffer.remove(tile_id)
-        print(self.location_buffer)
+        debug(f"Removed player location: {tile_id}", "PLAYER_DEBUG")
 
     def get_latest_location(self):
+        debug(f"Player location to display: {self.location_buffer[-1]}", "PLAYER_DEBUG")
         return self.location_buffer[-1]

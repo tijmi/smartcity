@@ -3,6 +3,7 @@ from pathlib import Path
 import math
 import numpy as np
 import json
+from Debugger import debug
 
 BASE_DIR = Path(__file__).parent
 TILE_TYPES_PATH = BASE_DIR / 'Tile_types.json'
@@ -16,7 +17,7 @@ class Calculator:
             self.data = json.load(jsonfile)
 
     def update_calculation(self, city, subtiles, tile_population, tile_soil_sealing):
-        print("updating calculations")
+        debug("updating calculations")
         self.city = city
         self.subtiles = subtiles
         for x in range(grid_size[0] * int(math.sqrt(subtile_amount))):

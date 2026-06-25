@@ -16,7 +16,6 @@ from Output import build_player_output
 url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
 allow_fake_input = False
-use_type_dots = True
 
 app = Flask(__name__)
 
@@ -71,7 +70,7 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap(3, True)
+    heatmap = Heatmap(3, False)
     borders = Borders(heatmap.size)
 
 
@@ -139,11 +138,10 @@ def update_everything(tile_manager, city, calculator, heatmap):
     UHI_array = get_UHI(all_subtiles)
     heatmap.update_grid(UHI_array)
 
-    # Display tile types if enabled
-    if use_type_dots:
-        get_type = np.vectorize(lambda tile: tile.type_id)
-        type_array = get_type(tile_manager.tiles)
-        heatmap.update_grid_ids(type_array)
+    # Display tile types
+    get_type = np.vectorize(lambda tile: tile.type_id)
+    type_array = get_type(tile_manager.tiles)
+    heatmap.update_grid_ids(type_array)
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()

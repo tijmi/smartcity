@@ -87,7 +87,7 @@ class Heatmap:
         self.heatmap = self.axis.imshow(
             placeholder_grid,
             extent=self.extent,
-            #interpolation='catrom',
+            interpolation='catrom',
             cmap="RdYlGn_r",
             vmin=0, vmax=3,
         )
@@ -153,7 +153,7 @@ class Heatmap:
         self.fig.canvas.flush_events()
 
     def update_grid(self, new_grid):
-        smoothed = new_grid #gaussian_filter(new_grid, sigma=2.5)
+        smoothed = gaussian_filter(new_grid, sigma=2.5)
         self.heatmap.set_data(smoothed)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()

@@ -70,7 +70,7 @@ def main():
     tile_manager = TileManager()
     calculator = Calculator()
     city = City()
-    heatmap = Heatmap(3, True)
+    heatmap = Heatmap(0, True)
     borders = Borders(heatmap.size)
 
 

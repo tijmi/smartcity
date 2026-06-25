@@ -86,7 +86,7 @@ class Heatmap:
         # ---------------------------------------------------------------------
         # Layer 2: heatmap overlay
         placeholder_grid = np.zeros((total_rows, total_cols, 1), dtype=np.float16)
-        heat_cmap = LinearSegmentedColormap.from_list('heat_cmap', ['green', 'yellow', 'red'], N=7)
+        heat_cmap = LinearSegmentedColormap.from_list('heat_cmap', ['green', 'yellow', 'red'], N=10)
         self.heatmap = self.axis.imshow(
             placeholder_grid,
             extent=self.extent,
@@ -177,7 +177,7 @@ class Heatmap:
         row_major_idx = (tile_index % grid_size[0]) * grid_size[1] + (tile_index // grid_size[0])
         x, y = self.full_tile_centers[row_major_idx]
         self.spotlight.set_offsets([[x, y]])
-        self.spotlight.set_alpha(0.3)
+        self.spotlight.set_alpha(0.5)
         self.fig.canvas.draw_idle()
         self.fig.canvas.flush_events()
 

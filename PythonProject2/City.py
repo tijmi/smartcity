@@ -9,10 +9,8 @@ from Info import grid_size, subtile_amount
 
 class City:
 
-    def __init__(self):
-        self.fake_tiles = np.ones(shape=(int(math.sqrt(subtile_amount)) * grid_size[0] + 2, int(math.sqrt(subtile_amount)) * grid_size[1] + 2))
-        self.city_data =  np.empty(shape=(int(math.sqrt(subtile_amount)) * grid_size[1] + 2, int(math.sqrt(subtile_amount)) * grid_size[0] + 2), dtype=dict)
-        self.name = "Eindhoven"
+    def __init__(self, city_id=1):
+        self.update_city(city_id)
 
     # use this when user choose city
     # receive from hardware

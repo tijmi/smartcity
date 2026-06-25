@@ -7,10 +7,11 @@ class PlayerLocation:
 
     def new_location(self, tile_id):
         self.location_buffer.append(tile_id) # Add the newest location
+        print(self.location_buffer)
 
     def remove_location(self, tile_id):
         self.location_buffer.remove(tile_id)
-        pass
+        print(self.location_buffer)
 
     def get_latest_location(self):
         return self.location_buffer[-1]

@@ -51,7 +51,7 @@ def main_thread(queue):
 if __name__ == '__main__':
     tile_manager = TileManager()
     calculator = Calculator()
-    city = City()
+    city = City(1)
     heatmap = Heatmap(3, True)
     borders = Borders(heatmap.size)
     server_out = ServerOutput(socket, Info)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     context = AppContext(tile_manager, calculator, city, heatmap, borders, server_out, player)
 
-    start_flask(event_queue)
+    start_flask(app, event_queue)
     if Info.allow_fake_input:
         fake_thread = threading.Thread(target=create_fake_input, args=(event_queue,), daemon=True)
         fake_thread.start()

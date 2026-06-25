@@ -16,7 +16,9 @@ def register_route(app, event_queue):
             return jsonify({"status": "error", "message": "Expected JSON object"}), 400
 
         if 'tile_id' in data and 'tile_type' in data:
-            if 'tile_type' == 0:
+            print(f"Received tile event: {data}")
+            if data.get('tile_type') == 0:
+                print("remooooooooooooooooooooooooooodr")
                 event_queue.put({"event_type": "tile_removed", "data": {
                     "tile_id": data.get('tile_id'),
                     "tile_type_id": data.get('tile_type')

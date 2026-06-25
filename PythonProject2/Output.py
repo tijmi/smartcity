@@ -37,6 +37,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
             "death": 0,
             "city": None,
             "population": 0,
+            "has_player": False,
             "neighbors": {
                 "front": None,
                 "left": None,
@@ -75,6 +76,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         "death": death_to_UHI,
         "city": city.name,
         "population": int(population / 45),
+        "has_player": True,
         "neighbors":{
             "front": get_neighbor_type(x-1, y),
             "left": get_neighbor_type(x, y-1),

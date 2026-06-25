@@ -27,7 +27,7 @@ class Heatmap:
 
         # Move the window to the specific screen and set it to fullscreen
         monitors = get_monitors()
-        target = monitors[0]
+        target = monitors[screen_index]
         print(f"window.wm_geometry(+{target.x}+{target.y})")
         manager = plt.get_current_fig_manager()
 
@@ -89,21 +89,39 @@ class Heatmap:
             extent=self.extent,
             interpolation='catrom',
             cmap="RdYlGn_r",
-            vmin=0, vmax=4,
+            vmin=0, vmax=3,
         )
 
         # ---------------------------------------------------------------------
-        # Layer 3: tile type/id overlay
+        # Layer 3: tile type overlay
         if display_tile_type:
 
             # placeholder values
             placeholder_grid2 = np.zeros(grid_rows * grid_cols)
 
+            cmap = matplotlib.colors.ListedColormap([
+                'blue',  # 0: empty/low_veg
+                'pink',  # 1: suburbs
+                'red',  # 2: built_high
+                'teal',  # 3: water
+                'purple',  # 4: low_veg
+                'green',  # 5: trees
+                'yellow',  # 6: farm
+                'pink',  # 7: player_built_low
+                'red',  # 8: player_built_high
+                'red',  # 9: player_apartment
+                'teal',  # 10: player_canals
+                'teal',  # 11: player_lakes
+                'purple',  # 12: player_parks
+                'green',  # 13: player_forest
+                'yellow',  # 14: player_farm
+            ])
+
             self.scatter = self.axis.scatter(
                 self.full_tile_centers[:, 0],  # x
                 self.full_tile_centers[:, 1],  # y
                 c=placeholder_grid2,  # values
-                cmap='tab20',
+                cmap=cmap,
                 vmin=0, vmax=14,
                 s=400,  # marker size
                 marker='o',  # circle

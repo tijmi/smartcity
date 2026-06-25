@@ -148,6 +148,7 @@ def update_everything(tile_manager, city, calculator, heatmap, new_tile_id=None)
     if new_tile_id is not None:
         new_tile_grid_pos = tile_manager.get_tile_position(new_tile_id)
         print(f"UHI of new tile: {new_tile_grid_pos[0]}, {new_tile_grid_pos[1]}: {UHI_array[new_tile_grid_pos[0], new_tile_grid_pos[1]]}")
+        print(UHI_array)
 
 def send_state(state: dict):
     msg = json.dumps(state).encode()

@@ -87,7 +87,7 @@ class Heatmap:
         self.heatmap = self.axis.imshow(
             placeholder_grid,
             extent=self.extent,
-            interpolation='catrom',
+            #interpolation='catrom',
             cmap="RdYlGn_r",
             vmin=0, vmax=3,
         )
@@ -105,7 +105,7 @@ class Heatmap:
                 'red',  # 2: built_high
                 'teal',  # 3: water
                 'purple',  # 4: low_veg
-                'green',  # 5: trees
+                'lightgreen',  # 5: trees
                 'yellow',  # 6: farm
                 'pink',  # 7: player_built_low
                 'red',  # 8: player_built_high
@@ -113,7 +113,7 @@ class Heatmap:
                 'teal',  # 10: player_canals
                 'teal',  # 11: player_lakes
                 'purple',  # 12: player_parks
-                'green',  # 13: player_forest
+                'lightgreen',  # 13: player_forest
                 'yellow',  # 14: player_farm
             ])
 

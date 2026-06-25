@@ -84,6 +84,6 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
         }
     }
 
-    debug(f"Output data: {output}")
+    debug(f"Output data: {output}", "EVENT_END")
 
     return output

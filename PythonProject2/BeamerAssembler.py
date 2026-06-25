@@ -1,11 +1,11 @@
 import math
-
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from Info import grid_size
+from Debugger import debug
 
 class Heatmap:
 
@@ -28,7 +28,7 @@ class Heatmap:
         # Move the window to the specific screen and set it to fullscreen
         monitors = get_monitors()
         target = monitors[screen_index]
-        print(f"window.wm_geometry(+{target.x}+{target.y})")
+        debug(f"window.wm_geometry(+{target.x}+{target.y})")
         manager = plt.get_current_fig_manager()
 
         manager.window.wm_geometry(f"{target.width}x{target.height}+{target.x}+{target.y}")
@@ -103,6 +103,7 @@ class Heatmap:
                 'blue',  # 0: empty/low_veg
                 'pink',  # 1: suburbs
                 'red',  # 2: built_high
+                'teal',  # 3: water
                 'teal',  # 3: water
                 'purple',  # 4: low_veg
                 'green',  # 5: trees

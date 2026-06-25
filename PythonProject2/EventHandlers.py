@@ -43,7 +43,11 @@ def handle_tile_removed(ctx, item):
     # If the removed tile is a player tile, update accordingly
     if tile_type > 6:
         ctx.player.remove_location(tile_id)
-        ctx.heatmap.set_spotlight(ctx.player.get_latest_location())
+        last_locations = ctx.player.get_latest_location()
+        if last_locations is not None:
+            ctx.heatmap.set_spotlight(last_locations)
+        else:
+            ctx.heatmap.clear_spotlight()
         build_new_player_output_flag = True
 
     print(ctx.player.get_latest_location())

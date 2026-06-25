@@ -1,15 +1,15 @@
 debug_settings = {
     "PROGRAM_STARTUP": True,
     "ERROR": True,
-    "STEP_DECISION": True,
-    "NO_FLAG": True,
+    "STEP_DECISION": False,
+    "NO_FLAG": False,
 
     "EVENT_START": True,
     "EVENT_END": True,
 
     "HANDLER_DEBUG": True,
-    "OUTPUT_DEBUG": True,
-    "TILE_DATA_DEBUG": True,
+    "OUTPUT_DEBUG": False,
+    "TILE_DATA_DEBUG": False,
     "PLAYER_DEBUG": True,
 }
 

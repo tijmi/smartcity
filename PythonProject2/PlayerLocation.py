@@ -11,8 +11,11 @@ class PlayerLocation:
         debug(f"New player location: {tile_id}", "PLAYER_DEBUG")
 
     def remove_location(self, tile_id):
-        self.location_buffer.remove(tile_id)
-        debug(f"Removed player location: {tile_id}", "PLAYER_DEBUG")
+        if tile_id in self.location_buffer:
+            print(" This runs")
+            self.location_buffer.remove(tile_id)
+            print(" This also runs")
+            debug(f"Removed player location: {tile_id}", "PLAYER_DEBUG")
 
     def get_latest_location(self):
         debug(f"Player location to display: {self.location_buffer[-1]}", "PLAYER_DEBUG")

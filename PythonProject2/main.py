@@ -53,7 +53,7 @@ if __name__ == '__main__':
     tile_manager = TileManager()
     calculator = Calculator()
     city = City(1)
-    heatmap = Heatmap(3, True)
+    heatmap = Heatmap(0, True)
     borders = Borders(heatmap.size)
     server_out = ServerOutput(socket, Info)
     player = PlayerLocation()

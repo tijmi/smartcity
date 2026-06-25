@@ -64,7 +64,6 @@ def build_player_output(player_id, tile_manager, city, temperature):
                 population += get_tile_population(tile_manager.tiles[i, j].type)
             except:
                 population += get_tile_population(city.fake_tiles[(i * int(math.sqrt(subtile_amount))) + 1, j * int(math.sqrt(subtile_amount)) + 1])
-
     # neighbors: for connect with scene in Unity
     return{
         "uhi": uhi,
@@ -72,7 +71,7 @@ def build_player_output(player_id, tile_manager, city, temperature):
         "land_use": tile.type,
         "death": death_to_UHI,
         "city": city.name,
-        "population": int(population / 45),
+        "population": int(population / 8),
         "has_player": True,
         "neighbors":{
             "front": get_neighbor_type(x-1, y),

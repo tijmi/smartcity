@@ -2,7 +2,9 @@ import math
 from Info import grid_size, subtile_amount
 from Helper_Functions import get_tile_population
 
-def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
+def get_player_loc_data(player_pos, city, tile_manager, temperature):
+    death = 475
+
     # Get UHI and wind data at player location
     wind_data = city.city_data[player_pos[0]][player_pos[1]]["ws_100m_alt"]
 
@@ -18,17 +20,12 @@ def get_player_loc_data(player_pos, city, tile_manager, temperature, death):
     average_UHI = total_UHI / subtile_amount
     average_wind = total_wind / subtile_amount
 
-    if temperature > 22:
-        death_to_UHI = int(death * (0.0284 * average_UHI))
-    elif temperature > 16:
-        death_to_UHI = int(death * (0.0157 * average_UHI))
-    else:
-        death_to_UHI = 0
+    death_to_UHI = int(death * (0.0284 * average_UHI))
 
     return average_wind, average_UHI, death_to_UHI
 
 # Collect all player output data and return
-def build_player_output(player_id, tile_manager, city, temperature, death):
+def build_player_output(player_id, tile_manager, city, temperature):
     if player_id is None:
         return {
             "uhi": 0,
@@ -50,7 +47,7 @@ def build_player_output(player_id, tile_manager, city, temperature, death):
     y = int(player_id // grid_size[0])
 
 
-    wind, uhi, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature, death)
+    wind, uhi, death_to_UHI = get_player_loc_data((x, y), city, tile_manager, temperature)
 
     tile = tile_manager.tiles[x, y]
 

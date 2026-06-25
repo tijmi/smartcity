@@ -76,7 +76,6 @@ def main():
 
     player_id = None
     temperature = 0
-    death = 0
 
     while True:
 
@@ -93,7 +92,6 @@ def main():
             with open(Path(__file__).parent / "month_data.json", 'r') as jsonfile:
                 month_data = json.load(jsonfile)
                 temperature = month_data[str(month)]["temperature"]
-                death = month_data[str(month)]["death"]
 
         if city_id is not None: # If new city
             city.update_city(city_id)
@@ -105,7 +103,7 @@ def main():
 
             if tile_id == player_id: # If player got replaced with tile
                 player_id = None
-                build_player_output(player_id, tile_manager, city, temperature, death)
+                build_player_output(player_id, tile_manager, city, temperature)
                 send_output(output)
 
                 heatmap.clear_spotlight() # Clear spotlight if player got replaced with tile
@@ -123,10 +121,10 @@ def main():
             update_everything(tile_manager, city, calculator, heatmap)
 
             if player_id is not None:
-                output = build_player_output(player_id, tile_manager, city, temperature, death)
+                output = build_player_output(player_id, tile_manager, city, temperature)
                 send_output(output)
             else:
-                output = build_player_output(player_id, tile_manager, city, temperature, death)
+                output = build_player_output(player_id, tile_manager, city, temperature)
                 send_output(output)
 
 

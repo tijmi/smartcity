@@ -6,12 +6,11 @@ import numpy as np
 from scipy.ndimage import gaussian_filter
 from Info import grid_size
 from Debugger import debug
+from screeninfo import get_monitors
 
 class Heatmap:
 
-    def __init__(self, screen_index=0, display_tile_type=False):
-        from screeninfo import get_monitors
-
+    def __init__(self, screen_index=0, display_tile_type=False, screeninfo=None):
         self.display_tile_type = display_tile_type
 
         # ---------------------------------------------------------------------

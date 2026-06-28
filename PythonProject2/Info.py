@@ -60,5 +60,5 @@ url_output = "http://192.168.1.3:5000/output"
 url_input = "http://192.168.1.1:5000/input"
 
 # Settings
-allow_fake_input = False
+allow_fake_input = True
 use_type_dots = True
